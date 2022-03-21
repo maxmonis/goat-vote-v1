@@ -64,13 +64,15 @@ const UserMenu = () => {
 
   return name ? (
     <Box>
-      <Tooltip title={name}>
+      <Tooltip title={t('Account') as string}>
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, border: 1 }}>
           <Avatar alt={name} src={imageUrl} />
         </IconButton>
       </Tooltip>
       <Menu
-        sx={{ mt: 10 }}
+        sx={{
+          mt: 10,
+        }}
         id='menu-appbar'
         anchorEl={anchorEl}
         anchorOrigin={{
@@ -84,11 +86,13 @@ const UserMenu = () => {
         }}
         open={Boolean(anchorEl)}
         onClose={handleCloseUserMenu}>
-        <MenuItem key={'New List'} onClick={handleCloseUserMenu}>
-          <Button component={Link} variant='contained' to='new-list'>
+        <MenuItem
+          component={Link}
+          to='new-list'
+          key={'New List'}
+          onClick={handleCloseUserMenu}>
             {t('New List')}
-          </Button>
-        </MenuItem>
+          </MenuItem>
         <MenuItem key='Google Logout' onClick={handleCloseUserMenu}>
           <GoogleLogout
             clientId={clientId}

@@ -11,7 +11,10 @@ const LocaleApp = () => {
   const { i18n, t } = useTranslation()
   const { changeLanguage } = i18n
   const [language, setLanguage] = useState('en')
-  const languages = ['en', 'es']
+  const languages = [
+    { key: 'en', name: 'English' },
+    { key: 'es', name: 'Spanish' },
+  ]
 
   const [anchorElLocales, setAnchorElLocales] = useState<null | HTMLElement>(
     null
@@ -33,7 +36,7 @@ const LocaleApp = () => {
 
   return (
     <Box>
-      <Tooltip title={'Language'} placement='right-end'>
+      <Tooltip title={t('Change language') as string} placement='top'>
         <IconButton size='small' onClick={handleOpenLocaleMenu}>
           <LanguageIcon />
           &nbsp;{language}
@@ -53,9 +56,9 @@ const LocaleApp = () => {
         }}
         open={Boolean(anchorElLocales)}
         onClose={handleCloseLocaleMenu}>
-        {languages.map(key => (
+        {languages.map(({ key, name }) => (
           <MenuItem key={key} onClick={() => handleClick(key)}>
-            {t(key)}
+            {t(name)}
           </MenuItem>
         ))}
       </Menu>

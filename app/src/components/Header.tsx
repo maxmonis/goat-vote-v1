@@ -1,4 +1,5 @@
 import { useState, MouseEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import AppBar from '@mui/material/AppBar'
 import Container from '@mui/material/Container'
@@ -10,6 +11,7 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import Switch from '@mui/material/Switch'
 import UserMenu from './UserMenu'
+import { t } from 'i18next'
 
 interface HeaderProps {
   dark: boolean
@@ -17,6 +19,7 @@ interface HeaderProps {
 }
 
 const Header = ({ dark, toggleDark }: HeaderProps) => {
+  const { t } = useTranslation()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   const handleOpenSettingsMenu = (event: MouseEvent<HTMLElement>) => {
@@ -39,7 +42,7 @@ const Header = ({ dark, toggleDark }: HeaderProps) => {
           <Container
             sx={{ display: { xs: 'none', sm: 'flex' }, gap: 10 }}
             disableGutters>
-            <Tooltip title={'Dark Mode'} placement='bottom'>
+            <Tooltip title={t('Toggle dark') as string} placement='bottom'>
               <Typography variant='h5'>
                 🌞
                 <Switch checked={dark} onChange={() => toggleDark()} />
@@ -67,7 +70,9 @@ const Header = ({ dark, toggleDark }: HeaderProps) => {
               open={Boolean(anchorEl)}
               onClose={handleCloseSettingsMenu}>
               <Container>
-                <Tooltip title={'Dark Mode'} placement='right-end'>
+                <Tooltip
+                  title={t('Toggle dark') as string}
+                  placement='right-end'>
                   <Typography variant='h5'>
                     🌞
                     <Switch checked={dark} onChange={() => toggleDark()} />

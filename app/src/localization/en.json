@@ -1,11 +1,15 @@
 {
+  "Account": "Account",
+  "Change language": "Change language",
+  "English": "English",
   "Login": "Login",
   "Logout": "Logout",
   "New List": "New List",
   "Next Step": "Next Step",
   "No results for '{{query}}'": "No results for '{{query}}'",
   "Previous Step": "Previous Step",
+  "Search players": "Search players",
   "Search powered by": "Search powered by",
-  "en": "English",
-  "es": "Spanish"
+  "Spanish": "Spanish",
+  "Toggle dark": "Toggle dark"
 }

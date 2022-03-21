@@ -33,7 +33,7 @@ interface Selection {
 }
 
 interface EditingListProps {
-  list: Selection[]
+  list?: Selection[]
   sport: string
 }
 
@@ -45,7 +45,8 @@ const EditingList = ({ list, sport }: EditingListProps) => {
   const [showSnackbar, setShowSnackbar] = useState(false)
   const [snackbarText, setSnackbarText] = useState('')
   const [availableOptions, setAvailableOptions] = useState<Selection[]>([])
-  const initialSelections = localStorageService.get('wip_list') || []
+  const initialSelections =
+    (localStorageService.get('wip_list') as Selection[]) || []
   const [selections, setSelections] = useState<Selection[]>(
     list || initialSelections
   )
@@ -80,7 +81,7 @@ const EditingList = ({ list, sport }: EditingListProps) => {
 
   const handleClick = (clickedTitle: string) => {
     if (selections.some(({ title }) => title === clickedTitle)) {
-      setSnackbarText(clickedTitle)
+      setSnackbarText(`You already added ${clickedTitle}`)
       setShowSnackbar(true)
     } else {
       const selectedOption = availableOptions.find(
@@ -124,7 +125,7 @@ const EditingList = ({ list, sport }: EditingListProps) => {
         autoHideDuration={3000}
         onClose={handleClose}>
         <Alert severity='error'>
-          {`You already added ${snackbarText}`}
+          {snackbarText}
           <Button
             sx={{ ml: 3 }}
             size='small'
@@ -134,11 +135,11 @@ const EditingList = ({ list, sport }: EditingListProps) => {
           </Button>
         </Alert>
       </Snackbar>
-      <Box sx={{ maxWidth: '20rem', mx: 'auto' }}>
+      <Box sx={{ maxWidth: 'xs', mx: 'auto' }}>
         <Box component='form' onSubmit={handleSubmit} noValidate>
           <Input
             autoFocus
-            placeholder='Search players'
+            placeholder={t('Search players')}
             value={wikiQuery}
             onChange={e => setWikiQuery(e.target.value)}
           />
