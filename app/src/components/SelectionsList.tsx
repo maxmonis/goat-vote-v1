@@ -35,8 +35,7 @@ const SelectionsList = ({ selections, setSelections }: SelectionsListProps) => {
   const removeSelection = (titleToRemove: string) => {
     setSelections(selections.filter(({ title }) => title !== titleToRemove))
   }
-  const handleDragEnd = (result: DropResult) => {
-    const { destination, source, draggableId } = result
+  const handleDragEnd = ({ destination, source, draggableId }: DropResult) => {
     if (destination && destination.index !== source.index) {
       const selectionTitles = selections.map(({ title }) => title)
       selectionTitles.splice(source.index, 1)
@@ -75,10 +74,9 @@ const SelectionsList = ({ selections, setSelections }: SelectionsListProps) => {
                         gap: 4,
                         justifyContent: 'space-between',
                         mx: 'auto',
-                        my: 0,
                         textAlign: 'left',
-                        '&:not(:first-of-type)': {
-                          mt: '-1px',
+                        '&:not(:last-of-type)': {
+                          mb: '-1px',
                         },
                       }}
                       ref={provided.innerRef}
@@ -109,7 +107,6 @@ const SelectionsList = ({ selections, setSelections }: SelectionsListProps) => {
                             {getInitials(title)}
                           </Avatar>
                         )}
-
                         <Typography variant='h6'>
                           {title.split(' (')[0]}
                         </Typography>

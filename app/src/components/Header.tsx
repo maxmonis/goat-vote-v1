@@ -9,9 +9,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import Switch from '@mui/material/Switch'
-
 import UserMenu from './UserMenu'
-import LocaleApp from './LocaleApp'
 
 interface HeaderProps {
   dark: boolean
@@ -28,6 +26,7 @@ const Header = ({ dark, toggleDark }: HeaderProps) => {
   const handleCloseSettingsMenu = () => {
     setAnchorEl(null)
   }
+
   return (
     <AppBar position='sticky'>
       <Container maxWidth='lg'>
@@ -37,11 +36,23 @@ const Header = ({ dark, toggleDark }: HeaderProps) => {
             px: 4,
             width: '100%',
           }}>
-          <Container>
+          <Container
+            sx={{ display: { xs: 'none', sm: 'flex' }, gap: 10 }}
+            disableGutters>
+            <Tooltip title={'Dark Mode'} placement='bottom'>
+              <Typography variant='h5'>
+                🌞
+                <Switch checked={dark} onChange={() => toggleDark()} />
+                🌛
+              </Typography>
+            </Tooltip>
+          </Container>
+          <Container sx={{ display: { sm: 'none' } }} disableGutters>
             <IconButton onClick={handleOpenSettingsMenu}>
               <MenuIcon />
             </IconButton>
             <Menu
+              sx={{ display: { sm: 'none' } }}
               id='menu-appbar'
               anchorEl={anchorEl}
               anchorOrigin={{
@@ -55,9 +66,6 @@ const Header = ({ dark, toggleDark }: HeaderProps) => {
               }}
               open={Boolean(anchorEl)}
               onClose={handleCloseSettingsMenu}>
-              <Container>
-                <LocaleApp />
-              </Container>
               <Container>
                 <Tooltip title={'Dark Mode'} placement='right-end'>
                   <Typography variant='h5'>

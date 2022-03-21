@@ -33,7 +33,7 @@ const LocaleApp = () => {
 
   return (
     <Box>
-      <Tooltip title={'Translate'} placement='right-end'>
+      <Tooltip title={'Language'} placement='right-end'>
         <IconButton size='small' onClick={handleOpenLocaleMenu}>
           <LanguageIcon />
           &nbsp;{language}

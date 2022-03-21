@@ -4,6 +4,8 @@ import Box from '@mui/material/Box'
 import Link from '@mui/material/Link'
 import Typography from '@mui/material/Typography'
 
+import LocaleApp from './LocaleApp'
+
 const Footer = () => {
   const { t } = useTranslation()
   return (
@@ -17,6 +19,7 @@ const Footer = () => {
         px: 4,
         textAlign: 'center',
       }}>
+      <LocaleApp />
       <Typography variant='body1'>
         {t('Search powered by')}{' '}
         <Link

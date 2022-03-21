@@ -1,9 +1,12 @@
-import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import Typography from '@mui/material/Typography'
+
 import EditingList from '../../components/EditingList'
 
 interface SportOptions {
@@ -79,7 +82,8 @@ const NewListApp = () => {
   const [selectedTimeframe, setSelectedTimeframe] = useState('all-time')
   const [selectedCategory, setSelectedCategory] = useState('player')
   return (
-    <Box
+    <Container
+      maxWidth='lg'
       sx={{
         display: 'flex',
         gap: 12,
@@ -88,7 +92,6 @@ const NewListApp = () => {
         mb: 0,
         mt: 16,
         mx: 'auto',
-        maxWidth: '50rem',
         px: 4,
         textAlign: 'center',
       }}>
@@ -129,7 +132,7 @@ const NewListApp = () => {
         </Select>
       </Box>
       <EditingList list={[]} sport={selectedSport} />
-    </Box>
+    </Container>
   )
 }
 

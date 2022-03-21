@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, SyntheticEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import Alert from '@mui/material/Alert'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import CloseIcon from '@mui/icons-material/Close'
 import IconButton from '@mui/material/IconButton'
@@ -10,6 +12,7 @@ import Input from '@mui/material/Input'
 import List from '@mui/material/List'
 import MenuItem from '@mui/material/MenuItem'
 import SearchIcon from '@mui/icons-material/Search'
+import Snackbar from '@mui/material/Snackbar'
 import Typography from '@mui/material/Typography'
 
 import SelectionsList from './SelectionsList'
@@ -39,6 +42,8 @@ const EditingList = ({ list, sport }: EditingListProps) => {
   const { t } = useTranslation()
   const [appliedQuery, setAppliedQuery] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [showSnackbar, setShowSnackbar] = useState(false)
+  const [snackbarText, setSnackbarText] = useState('')
   const [availableOptions, setAvailableOptions] = useState<Selection[]>([])
   const initialSelections = localStorageService.get('wip_list') || []
   const [selections, setSelections] = useState<Selection[]>(
@@ -46,6 +51,18 @@ const EditingList = ({ list, sport }: EditingListProps) => {
   )
   const [wikiQuery, setWikiQuery] = useState('')
   const debouncedQuery = useDebounce(wikiQuery, 500)
+
+  const resetSearch = () => {
+    setWikiQuery('')
+    setAppliedQuery('')
+    setAvailableOptions([])
+    setShowSnackbar(false)
+  }
+
+  const handleClose = (_event?: SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') return
+    setShowSnackbar(false)
+  }
 
   const fetchOptions = async (query: string) => {
     if (isLoading) return
@@ -62,7 +79,10 @@ const EditingList = ({ list, sport }: EditingListProps) => {
   }
 
   const handleClick = (clickedTitle: string) => {
-    if (!selections.some(({ title }) => title === clickedTitle)) {
+    if (selections.some(({ title }) => title === clickedTitle)) {
+      setSnackbarText(clickedTitle)
+      setShowSnackbar(true)
+    } else {
       const selectedOption = availableOptions.find(
         ({ title }) => title === clickedTitle
       )
@@ -76,12 +96,6 @@ const EditingList = ({ list, sport }: EditingListProps) => {
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
     if (wikiQuery.length > 2) fetchOptions(wikiQuery)
-  }
-
-  const reset = () => {
-    setWikiQuery('')
-    setAppliedQuery('')
-    setAvailableOptions([])
   }
 
   useEffect(() => {
@@ -105,6 +119,21 @@ const EditingList = ({ list, sport }: EditingListProps) => {
         mx: 'auto',
         textAlign: 'center',
       }}>
+      <Snackbar
+        open={showSnackbar}
+        autoHideDuration={3000}
+        onClose={handleClose}>
+        <Alert severity='error'>
+          {`You already added ${snackbarText}`}
+          <Button
+            sx={{ ml: 3 }}
+            size='small'
+            variant='outlined'
+            onClick={resetSearch}>
+            Clear Query
+          </Button>
+        </Alert>
+      </Snackbar>
       <Box sx={{ maxWidth: '20rem', mx: 'auto' }}>
         <Box component='form' onSubmit={handleSubmit} noValidate>
           <Input
@@ -117,13 +146,13 @@ const EditingList = ({ list, sport }: EditingListProps) => {
             <SearchIcon />
           </IconButton>
           {(Boolean(wikiQuery) || availableOptions.length > 0) && (
-            <IconButton onClick={reset}>
+            <IconButton onClick={resetSearch}>
               <CloseIcon />
             </IconButton>
           )}
         </Box>
         {isLoading ? (
-          <CircularProgress sx={{ my: 8 }} />
+          <CircularProgress sx={{ my: 4 }} />
         ) : availableOptions.length ? (
           <List sx={{ mt: 1 }}>
             {availableOptions.map(
@@ -155,7 +184,7 @@ const EditingList = ({ list, sport }: EditingListProps) => {
               )
             )}
           </List>
-        ) : appliedQuery ? (
+        ) : appliedQuery && appliedQuery === wikiQuery ? (
           <Typography sx={{ mt: 3 }} variant='h6'>
             {t(`No results for '{{query}}'`, { query: appliedQuery })}
           </Typography>
