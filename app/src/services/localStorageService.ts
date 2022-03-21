@@ -1,16 +1,18 @@
-const PREFIX = 'goat-vote_'
-
 class LocalStorageService {
+  private storageKey = process.env.REACT_APP_LOCAL_STORAGE_KEY
+  private getFullKey = (key: string) => this.storageKey + key
+
   get(key: string): unknown {
-    return JSON.parse(localStorage.getItem(PREFIX + key) || '')
+    const res = localStorage.getItem(this.getFullKey(key))
+    return res ? JSON.parse(res) : null
   }
 
   set(key: string, payload: unknown) {
-    localStorage.setItem(PREFIX + key, JSON.stringify(payload))
+    localStorage.setItem(this.getFullKey(key), JSON.stringify(payload))
   }
 
   remove(key: string) {
-    localStorage.remove(PREFIX + key)
+    localStorage.remove(this.getFullKey(key))
   }
 
   clear() {

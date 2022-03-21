@@ -44,28 +44,22 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
         <Box>
-          <Box
+          <Header dark={dark} toggleDark={toggleDark} />
+          <Container
+            maxWidth='lg'
             sx={{
-              justifyContent: 'space-between',
+              mx: 'auto',
               minHeight: '90vh',
               width: '100%',
             }}>
-            <Header dark={dark} toggleDark={toggleDark} />
-            <Container
-              maxWidth='lg'
-              sx={{
-                mx: 'auto',
-                width: '100%',
-              }}>
-              <Routes>
-                <Route path='/counter' element={<Counter />} />
-                <Route path='/new-list' element={<NewListApp />} />
-                <Route path='/' element={<NewListApp />} />
-              </Routes>
-            </Container>
-          </Box>
-          <Footer />
+            <Routes>
+              <Route path='/counter' element={<Counter />} />
+              <Route path='/new-list' element={<NewListApp />} />
+              <Route path='/' element={<NewListApp />} />
+            </Routes>
+          </Container>
         </Box>
+        <Footer />
       </ThemeProvider>
     </Router>
   )

@@ -11,7 +11,6 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import Switch from '@mui/material/Switch'
 import UserMenu from './UserMenu'
-import { t } from 'i18next'
 
 interface HeaderProps {
   dark: boolean

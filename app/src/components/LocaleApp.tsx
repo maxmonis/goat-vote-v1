@@ -7,7 +7,10 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Tooltip from '@mui/material/Tooltip'
 
+import LocalStorageService from '../services/localStorageService'
+
 const LocaleApp = () => {
+  const localStorageService = new LocalStorageService()
   const { i18n, t } = useTranslation()
   const { changeLanguage } = i18n
   const [language, setLanguage] = useState('en')
@@ -29,6 +32,7 @@ const LocaleApp = () => {
   }
 
   const handleClick = (key: string) => {
+    localStorageService.set('preferred-lng', key)
     handleCloseLocaleMenu()
     setLanguage(key)
     changeLanguage(key)

@@ -8,7 +8,7 @@ import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import CloseIcon from '@mui/icons-material/Close'
 import IconButton from '@mui/material/IconButton'
-import Input from '@mui/material/Input'
+import TextField from '@mui/material/TextField'
 import List from '@mui/material/List'
 import MenuItem from '@mui/material/MenuItem'
 import SearchIcon from '@mui/icons-material/Search'
@@ -57,6 +57,7 @@ const EditingList = ({ list, sport }: EditingListProps) => {
     setWikiQuery('')
     setAppliedQuery('')
     setAvailableOptions([])
+    setSnackbarText('')
     setShowSnackbar(false)
   }
 
@@ -138,10 +139,18 @@ const EditingList = ({ list, sport }: EditingListProps) => {
         </Alert>
       </Snackbar>
       <Box sx={{ maxWidth: 'xs', mx: 'auto' }}>
-        <Box component='form' onSubmit={handleSubmit} noValidate>
-          <Input
+        <Box
+          component='form'
+          onSubmit={handleSubmit}
+          noValidate
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            gap: 1,
+          }}>
+          <TextField
             autoFocus
-            placeholder={t('Search players')}
+            label={t('Search players')}
             value={wikiQuery}
             onChange={e => setWikiQuery(e.target.value)}
           />
@@ -154,6 +163,15 @@ const EditingList = ({ list, sport }: EditingListProps) => {
             </IconButton>
           )}
         </Box>
+        {appliedQuery && availableOptions.length === 0 && (
+          <Typography
+            sx={{ mt: 1 }}
+            variant='body2'
+            color='error.light'
+            textAlign='left'>
+            {t(`No results for '{{query}}'`, { query: appliedQuery })}
+          </Typography>
+        )}
         {isLoading ? (
           <CircularProgress sx={{ my: 4 }} />
         ) : availableOptions.length ? (
@@ -186,10 +204,6 @@ const EditingList = ({ list, sport }: EditingListProps) => {
               )
             )}
           </List>
-        ) : appliedQuery && appliedQuery === wikiQuery ? (
-          <Typography sx={{ mt: 3 }} variant='h6'>
-            {t(`No results for '{{query}}'`, { query: appliedQuery })}
-          </Typography>
         ) : null}
       </Box>
       {selections.length > 0 && (
