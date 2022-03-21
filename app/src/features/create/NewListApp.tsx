@@ -96,7 +96,6 @@ const NewListApp = () => {
         mx: 'auto',
         textAlign: 'center',
       }}>
-      <Typography variant='h2'>{t('New List')}</Typography>
       <Box display='flex' flexWrap='wrap' gap={2} justifyContent='center'>
         <Select
           value={selectedCategory}

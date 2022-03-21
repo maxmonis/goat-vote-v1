@@ -1,6 +1,7 @@
 {
   "Account": "Account",
   "Change language": "Change language",
+  "Clear query": "Clear query",
   "English": "English",
   "Login": "Login",
   "Logout": "Logout",
@@ -11,5 +12,6 @@
   "Search players": "Search players",
   "Search powered by": "Search powered by",
   "Spanish": "Spanish",
-  "Toggle dark": "Toggle dark"
+  "Toggle dark": "Toggle dark",
+  "{{option}} is already in the list": "{{option}} is already in the list"
 }

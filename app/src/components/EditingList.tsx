@@ -81,7 +81,9 @@ const EditingList = ({ list, sport }: EditingListProps) => {
 
   const handleClick = (clickedTitle: string) => {
     if (selections.some(({ title }) => title === clickedTitle)) {
-      setSnackbarText(`You already added ${clickedTitle}`)
+      setSnackbarText(
+        t('{{option}} is already in the list', { option: clickedTitle })
+      )
       setShowSnackbar(true)
     } else {
       const selectedOption = availableOptions.find(
@@ -131,7 +133,7 @@ const EditingList = ({ list, sport }: EditingListProps) => {
             size='small'
             variant='outlined'
             onClick={resetSearch}>
-            Clear Query
+            {t('Clear query')}
           </Button>
         </Alert>
       </Snackbar>
@@ -162,7 +164,6 @@ const EditingList = ({ list, sport }: EditingListProps) => {
                   {Boolean(width) ? (
                     <Avatar
                       sx={{
-                        borderRadius: '40%',
                         height: Number(height) / 2,
                         mr: 2,
                         width: Number(width) / 2,

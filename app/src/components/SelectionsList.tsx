@@ -94,7 +94,11 @@ const SelectionsList = ({ selections, setSelections }: SelectionsListProps) => {
                         </Typography>
                         {Boolean(source) ? (
                           <Avatar
-                            sx={{ height, width, borderRadius: '40%' }}
+                            sx={{
+                              height,
+                              width,
+                              maxWidth: 1/4,
+                            }}
                             alt={title}
                             src={source}
                           />

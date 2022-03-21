@@ -1,6 +1,7 @@
 {
   "Account": "Cuenta",
   "Change language": "Cambiar idioma",
+  "Clear query": "Borrar consulta",
   "English": "Inglés",
   "Login": "Entrar",
   "Logout": "Salir",
@@ -11,5 +12,6 @@
   "Search players": "Buscar jugadores",
   "Search powered by": "Búsqueda proporcionada por",
   "Spanish": "Español",
-  "Toggle dark": "Cambiar tema"
+  "Toggle dark": "Cambiar tema",
+  "{{option}} is already in the list": "{{option}} ya está en la lista"
 }

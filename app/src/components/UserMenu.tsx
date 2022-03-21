@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next'
 
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/system/Box'
-import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -91,8 +90,8 @@ const UserMenu = () => {
           to='new-list'
           key={'New List'}
           onClick={handleCloseUserMenu}>
-            {t('New List')}
-          </MenuItem>
+          {t('New List')}
+        </MenuItem>
         <MenuItem key='Google Logout' onClick={handleCloseUserMenu}>
           <GoogleLogout
             clientId={clientId}
