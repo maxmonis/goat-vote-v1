@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
+import Typography from '@mui/material/Typography'
 
 import EditingList from '../../components/EditingList'
 
@@ -77,6 +79,7 @@ const options: Options = {
 }
 
 const NewListApp = () => {
+  const { t } = useTranslation()
   const [selectedSport, setSelectedSport] = useState('basketball')
   const [selectedTimeframe, setSelectedTimeframe] = useState('all-time')
   const [selectedCategory, setSelectedCategory] = useState('player')
@@ -93,6 +96,7 @@ const NewListApp = () => {
         m: 'auto',
         textAlign: 'center',
       }}>
+      <Typography variant='h1'>{t('New List')}</Typography>
       <Box display='flex' flexWrap='wrap' gap={2} justifyContent='center'>
         <Select
           value={selectedCategory}

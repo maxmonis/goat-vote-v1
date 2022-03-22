@@ -8,7 +8,7 @@ const app = express()
 
 app.use(express.json({ extended: false }))
 
-// app.use('/api/search', require('./routes/search'))
+app.use('/api/search', require('./routes/search'))
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('app/build'))

@@ -6,7 +6,6 @@ import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
-import CloseIcon from '@mui/icons-material/Close'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import List from '@mui/material/List'
@@ -157,11 +156,6 @@ const EditingList = ({ list, sport }: EditingListProps) => {
           <IconButton type='submit'>
             <SearchIcon />
           </IconButton>
-          {(Boolean(wikiQuery) || availableOptions.length > 0) && (
-            <IconButton onClick={resetSearch}>
-              <CloseIcon />
-            </IconButton>
-          )}
         </Box>
         {appliedQuery && availableOptions.length === 0 && (
           <Typography
@@ -175,35 +169,43 @@ const EditingList = ({ list, sport }: EditingListProps) => {
         {isLoading ? (
           <CircularProgress sx={{ my: 4 }} />
         ) : availableOptions.length ? (
-          <List sx={{ mt: 1 }}>
-            {availableOptions.map(
-              ({ title, thumbnail: { height, source, width } }) => (
-                <MenuItem key={title} onClick={() => handleClick(title)}>
-                  {Boolean(width) ? (
-                    <Avatar
-                      sx={{
-                        height: Number(height) / 2,
-                        mr: 2,
-                        width: Number(width) / 2,
-                      }}
-                      alt={title}
-                      src={source}
-                    />
-                  ) : (
-                    <Avatar
-                      sx={{
-                        height: 40,
-                        mr: 2,
-                        width: 40,
-                      }}>
-                      {getInitials(title)}
-                    </Avatar>
-                  )}
-                  {title}
-                </MenuItem>
-              )
-            )}
-          </List>
+          <Box>
+            <List sx={{ mt: 1 }}>
+              {availableOptions.map(
+                ({ title, thumbnail: { height, source, width } }) => (
+                  <MenuItem key={title} onClick={() => handleClick(title)}>
+                    {Boolean(width) ? (
+                      <Avatar
+                        sx={{
+                          height: Number(height) / 2,
+                          mr: 2,
+                          width: Number(width) / 2,
+                        }}
+                        alt={title}
+                        src={source}
+                      />
+                    ) : (
+                      <Avatar
+                        sx={{
+                          height: 40,
+                          mr: 2,
+                          width: 40,
+                        }}>
+                        {getInitials(title)}
+                      </Avatar>
+                    )}
+                    {title}
+                  </MenuItem>
+                )
+              )}
+            </List>
+            <Button
+              sx={{ mt: 5 }}
+              size='small'
+              onClick={resetSearch}>
+              {t('Clear query')}
+            </Button>
+          </Box>
         ) : null}
       </Box>
       {selections.length > 0 && (

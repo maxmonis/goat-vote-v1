@@ -13,6 +13,7 @@
     "serve": "nodemon server.js"
   },
   "dependencies": {
+    "axios": "^0.26.1",
     "config": "^3.3.7",
     "express": "^4.17.3",
     "mongoose": "^6.2.7"
