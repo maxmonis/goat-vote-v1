@@ -23,7 +23,7 @@ const searchWiki = async (query: string, sport: string) => {
     const description = revisions[0]['*']
     if (!title.includes('(') && _isValidOption(description)) {
       const validOption = allOptions.find(option => option.title === title)
-      validOption.thumbnail = validOption.thumbnail || {}
+      validOption.thumbnail ||= {}
       options.push(validOption)
     }
   }

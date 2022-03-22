@@ -38,9 +38,7 @@ const Header = ({ dark, toggleDark }: HeaderProps) => {
             px: 4,
             width: '100%',
           }}>
-          <Container
-            sx={{ display: { xs: 'none', sm: 'flex' }, gap: 10 }}
-            disableGutters>
+          <Container sx={{ display: { xs: 'none', sm: 'flex' }, gap: 10 }}>
             <Tooltip title={t('Toggle dark') as string} placement='bottom'>
               <Typography variant='h5'>
                 🌞
@@ -49,7 +47,7 @@ const Header = ({ dark, toggleDark }: HeaderProps) => {
               </Typography>
             </Tooltip>
           </Container>
-          <Container sx={{ display: { sm: 'none' } }} disableGutters>
+          <Container sx={{ display: { sm: 'none' } }}>
             <IconButton onClick={handleOpenSettingsMenu}>
               <MenuIcon />
             </IconButton>

@@ -207,7 +207,15 @@ const EditingList = ({ list, sport }: EditingListProps) => {
         ) : null}
       </Box>
       {selections.length > 0 && (
-        <SelectionsList selections={selections} setSelections={setSelections} />
+        <Box display='grid' gap={20}>
+          <SelectionsList
+            selections={selections}
+            setSelections={setSelections}
+          />
+          <Button variant='contained' size='large'>
+            {t('Save')}
+          </Button>
+        </Box>
       )}
     </Box>
   )

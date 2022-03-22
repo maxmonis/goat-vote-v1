@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom'
 import {
   GoogleLogin,
   GoogleLogout,
-  GoogleLoginResponse,
-  GoogleLoginResponseOffline,
 } from 'react-google-login'
 import { useTranslation } from 'react-i18next'
 
@@ -17,37 +15,11 @@ import Tooltip from '@mui/material/Tooltip'
 
 import { useAppSelector, useAppDispatch } from '../app/hooks'
 import { selectUser, setUser, resetUser } from '../features/auth/authSlice'
-import refreshToken from '../functions/refreshToken'
 
 const UserMenu = () => {
-  const { name, imageUrl } = useAppSelector(selectUser)
+  const { profileObj } = useAppSelector(selectUser)
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
-
-  const isValidResponse = (
-    res: GoogleLoginResponse | GoogleLoginResponseOffline
-  ): res is GoogleLoginResponse =>
-    typeof (res as GoogleLoginResponse) !== 'undefined'
-
-  const handleSuccess = (
-    res: GoogleLoginResponse | GoogleLoginResponseOffline
-  ) => {
-    if (isValidResponse(res)) {
-      refreshToken(res)
-      const updatedUser = res.profileObj
-      dispatch(setUser(updatedUser))
-    }
-  }
-
-  const handleLogoutSuccess = () => {
-    dispatch(resetUser())
-  }
-
-  const handleFailure = (res: GoogleLoginResponse) => {
-    console.info('Login failed with this response: ', res)
-    dispatch(resetUser())
-  }
-
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
@@ -59,13 +31,13 @@ const UserMenu = () => {
   }
 
   const clientId = process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID
-  if (!clientId) return null
+  if (typeof clientId !== 'string') return null
 
-  return name ? (
+  return profileObj ? (
     <Box>
       <Tooltip title={t('Account') as string}>
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, border: 1 }}>
-          <Avatar alt={name} src={imageUrl} />
+          <Avatar alt={profileObj.name} src={profileObj.imageUrl} />
         </IconButton>
       </Tooltip>
       <Menu
@@ -96,7 +68,7 @@ const UserMenu = () => {
           <GoogleLogout
             clientId={clientId}
             buttonText={t('Logout')}
-            onLogoutSuccess={handleLogoutSuccess}
+            onLogoutSuccess={() => dispatch(resetUser())}
           />
         </MenuItem>
       </Menu>
@@ -105,8 +77,8 @@ const UserMenu = () => {
     <GoogleLogin
       clientId={clientId}
       buttonText={t('Login')}
-      onSuccess={handleSuccess}
-      onFailure={handleFailure}
+      onSuccess={e => dispatch(setUser(e))}
+      onFailure={() => dispatch(resetUser())}
       cookiePolicy='single_host_origin'
       isSignedIn={true}
     />

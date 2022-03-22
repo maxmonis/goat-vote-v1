@@ -12,7 +12,7 @@ class LocalStorageService {
   }
 
   remove(key: string) {
-    localStorage.remove(this.getFullKey(key))
+    localStorage.removeItem(this.getFullKey(key))
   }
 
   clear() {
