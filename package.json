@@ -1,0 +1,24 @@
+{
+  "name": "goat-vote-api",
+  "version": "0.1.0",
+  "description": "GOAT list creator",
+  "author": "Max Monis <mmonis77@gmail.com>",
+  "main": "server.js",
+  "repository": "https://github.com/maxmonis/goat-vote.git",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"yarn:serve\" \"cd app && yarn start\"",
+    "start": "node server.js",
+    "serve": "nodemon server.js"
+  },
+  "dependencies": {
+    "config": "^3.3.7",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.7"
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0",
+    "nodemon": "^2.0.15"
+  }
+}
