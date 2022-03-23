@@ -2,12 +2,14 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import Typography from '@mui/material/Typography'
 
 import EditingList from '../../components/EditingList'
+import LocalStorageService from '../../services/localStorageService'
 
 interface SportOptions {
   timeframes: string[]
@@ -16,6 +18,17 @@ interface SportOptions {
 
 interface Options {
   [key: string]: SportOptions
+}
+
+interface Thumbnail {
+  source: string
+  height: string
+  width: string
+}
+
+interface Selection {
+  title: string
+  thumbnail: Thumbnail
 }
 
 const defaultTimeframes = [
@@ -79,10 +92,15 @@ const options: Options = {
 }
 
 const NewListApp = () => {
+  const localStorageService = new LocalStorageService()
   const { t } = useTranslation()
   const [selectedSport, setSelectedSport] = useState('basketball')
   const [selectedTimeframe, setSelectedTimeframe] = useState('all-time')
   const [selectedCategory, setSelectedCategory] = useState('player')
+  const initialSelections =
+    (localStorageService.get('wip_list') as Selection[]) || []
+  const [selections, setSelections] = useState<Selection[]>(initialSelections)
+  const handleClick = () => {}
   return (
     <Container
       maxWidth='lg'
@@ -126,7 +144,21 @@ const NewListApp = () => {
           ))}
         </Select>
       </Box>
-      <EditingList sport={selectedSport} />
+      <EditingList
+        selections={selections}
+        setSelections={setSelections}
+        sport={selectedSport}
+      />
+      <Button
+        onClick={handleClick}
+        variant='contained'
+        size='large'
+        sx={{
+          width: 'clamp(15rem, 40vw, 40rem)',
+          mx: 'auto',
+        }}>
+        {t('Save')}
+      </Button>
     </Container>
   )
 }

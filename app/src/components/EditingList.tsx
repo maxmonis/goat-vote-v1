@@ -1,4 +1,10 @@
-import { useEffect, useState, SyntheticEvent } from 'react'
+import {
+  useEffect,
+  useState,
+  SyntheticEvent,
+  Dispatch,
+  SetStateAction,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Alert from '@mui/material/Alert'
@@ -32,11 +38,16 @@ interface Selection {
 }
 
 interface EditingListProps {
-  list?: Selection[]
+  selections: Selection[]
+  setSelections: Dispatch<SetStateAction<Selection[]>>
   sport: string
 }
 
-const EditingList = ({ list, sport }: EditingListProps) => {
+const EditingList = ({
+  selections,
+  setSelections,
+  sport,
+}: EditingListProps) => {
   const localStorageService = new LocalStorageService()
   const { t } = useTranslation()
   const [appliedQuery, setAppliedQuery] = useState('')
@@ -44,11 +55,6 @@ const EditingList = ({ list, sport }: EditingListProps) => {
   const [showSnackbar, setShowSnackbar] = useState(false)
   const [snackbarText, setSnackbarText] = useState('')
   const [availableOptions, setAvailableOptions] = useState<Selection[]>([])
-  const initialSelections =
-    (localStorageService.get('wip_list') as Selection[]) || []
-  const [selections, setSelections] = useState<Selection[]>(
-    list || initialSelections
-  )
   const [wikiQuery, setWikiQuery] = useState('')
   const debouncedQuery = useDebounce(wikiQuery, 500)
 
@@ -71,7 +77,7 @@ const EditingList = ({ list, sport }: EditingListProps) => {
     try {
       const res = await searchWiki(query, sport)
       setAvailableOptions(res.options)
-      setAppliedQuery(res.query)
+      setAppliedQuery(res.term)
     } catch (error) {
       console.error(error)
     } finally {
@@ -114,14 +120,12 @@ const EditingList = ({ list, sport }: EditingListProps) => {
 
   return (
     <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 16,
-        justifyContent: 'center',
-        mx: 'auto',
-        textAlign: 'center',
-      }}>
+      display='flex'
+      flexDirection='column'
+      gap={10}
+      justifyContent='center'
+      mx='auto'
+      textAlign='center'>
       <Snackbar
         open={showSnackbar}
         autoHideDuration={3000}
@@ -137,18 +141,17 @@ const EditingList = ({ list, sport }: EditingListProps) => {
           </Button>
         </Alert>
       </Snackbar>
-      <Box sx={{ maxWidth: 'xs', mx: 'auto' }}>
+      <Box maxWidth='xs' mx='auto'>
         <Box
           component='form'
           onSubmit={handleSubmit}
           noValidate
-          sx={{
-            alignItems: 'center',
-            display: 'flex',
-            gap: 1,
-          }}>
+          alignItems='center'
+          display='flex'
+          gap={1}>
           <TextField
             autoFocus
+            autoComplete='off'
             label={t('Search players')}
             value={wikiQuery}
             onChange={e => setWikiQuery(e.target.value)}
@@ -157,67 +160,68 @@ const EditingList = ({ list, sport }: EditingListProps) => {
             <SearchIcon />
           </IconButton>
         </Box>
-        {appliedQuery && availableOptions.length === 0 && (
+        {Boolean(appliedQuery) && (
           <Typography
-            sx={{ mt: 1 }}
+            mt={1}
+            maxWidth='15rem'
+            whiteSpace='break-spaces'
             variant='body2'
-            color='error.light'
+            color={availableOptions.length ? '' : 'error.light'}
             textAlign='left'>
-            {t(`No results for '{{query}}'`, { query: appliedQuery })}
+            {t(
+              availableOptions.length
+                ? `Showing results for '{{query}}'`
+                : `No results for '{{query}}'`,
+              { query: appliedQuery }
+            )}
           </Typography>
         )}
-        {isLoading ? (
-          <CircularProgress sx={{ my: 4 }} />
-        ) : availableOptions.length ? (
-          <Box>
-            <List sx={{ mt: 1 }}>
-              {availableOptions.map(
-                ({ title, thumbnail: { height, source, width } }) => (
-                  <MenuItem key={title} onClick={() => handleClick(title)}>
-                    {Boolean(width) ? (
-                      <Avatar
-                        sx={{
-                          height: Number(height) / 2,
-                          mr: 2,
-                          width: Number(width) / 2,
-                        }}
-                        alt={title}
-                        src={source}
-                      />
-                    ) : (
-                      <Avatar
-                        sx={{
-                          height: 40,
-                          mr: 2,
-                          width: 40,
-                        }}>
-                        {getInitials(title)}
-                      </Avatar>
-                    )}
-                    {title}
-                  </MenuItem>
-                )
-              )}
-            </List>
-            <Button
-              sx={{ mt: 5 }}
-              size='small'
-              onClick={resetSearch}>
+        {isLoading && (
+          <Box mt={8}>
+            <CircularProgress />
+          </Box>
+        )}
+        {availableOptions.length > 0 && (
+          <List sx={{ mt: 3 }}>
+            {availableOptions.map(
+              ({ title, thumbnail: { height, source, width } }) => (
+                <MenuItem key={title} onClick={() => handleClick(title)}>
+                  {Boolean(width) ? (
+                    <Avatar
+                      sx={{
+                        height: Number(height) / 2,
+                        mr: 2,
+                        width: Number(width) / 2,
+                      }}
+                      alt={title}
+                      src={source}
+                    />
+                  ) : (
+                    <Avatar
+                      sx={{
+                        height: 40,
+                        mr: 2,
+                        width: 40,
+                      }}>
+                      {getInitials(title)}
+                    </Avatar>
+                  )}
+                  {title}
+                </MenuItem>
+              )
+            )}
+          </List>
+        )}
+        {Boolean(appliedQuery) && (
+          <Box mt={5}>
+            <Button size='small' onClick={resetSearch}>
               {t('Clear query')}
             </Button>
           </Box>
-        ) : null}
+        )}
       </Box>
       {selections.length > 0 && (
-        <Box display='grid' gap={20}>
-          <SelectionsList
-            selections={selections}
-            setSelections={setSelections}
-          />
-          <Button variant='contained' size='large'>
-            {t('Save')}
-          </Button>
-        </Box>
+        <SelectionsList selections={selections} setSelections={setSelections} />
       )}
     </Box>
   )

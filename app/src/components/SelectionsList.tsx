@@ -97,7 +97,7 @@ const SelectionsList = ({ selections, setSelections }: SelectionsListProps) => {
                             sx={{
                               height,
                               width,
-                              maxWidth: 1/4,
+                              maxWidth: 1 / 4,
                             }}
                             alt={title}
                             src={source}
@@ -107,7 +107,8 @@ const SelectionsList = ({ selections, setSelections }: SelectionsListProps) => {
                             sx={{
                               height: 60,
                               width: 60,
-                            }}>
+                            }}
+                            alt={title}>
                             {getInitials(title)}
                           </Avatar>
                         )}
