@@ -23,8 +23,7 @@ export const selectUser = (state: RootState) => state.auth.user
 
 const isOnlineResponse = (
   res: GoogleLoginResponse | GoogleLoginResponseOffline
-): res is GoogleLoginResponse =>
-  typeof (res as GoogleLoginResponse) !== 'undefined'
+): res is GoogleLoginResponse => Boolean(res as GoogleLoginResponse)
 
 export const authSlice = createSlice({
   name: 'auth',

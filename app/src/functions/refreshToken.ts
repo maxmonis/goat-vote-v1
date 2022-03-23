@@ -1,5 +1,5 @@
 import { GoogleLoginResponse } from 'react-google-login'
-import axios from 'axios';
+import axios from 'axios'
 
 import LocalStorageService from '../services/localStorageService'
 
@@ -20,13 +20,13 @@ const refreshToken = ({
 
 export default refreshToken
 
-function setAuthtoken (token?: string) {
+function setAuthtoken(token?: string) {
   const localStorageService = new LocalStorageService()
   if (typeof token === 'string') {
     localStorageService.set('access_token', token)
-    axios.defaults.headers.common['x-auth-token'] = token;
+    axios.defaults.headers.common['x-auth-token'] = token
   } else {
     localStorageService.remove('access_token')
-    delete axios.defaults.headers.common['x-auth-token'];
+    delete axios.defaults.headers.common['x-auth-token']
   }
-};
+}

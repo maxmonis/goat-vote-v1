@@ -10,15 +10,13 @@ const Footer = () => {
   const { t } = useTranslation()
   return (
     <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        mt: 40,
-        py: 0,
-        px: 4,
-        textAlign: 'center',
-      }}>
+      display='flex'
+      flexDirection='column'
+      justifyContent='center'
+      mt={40}
+      py={0}
+      px={4}
+      textAlign='center'>
       <LocaleApp />
       <Typography variant='body1'>
         {t('Search powered by')}{' '}
@@ -30,7 +28,7 @@ const Footer = () => {
         </Link>
       </Typography>
       <Typography
-        sx={{ my: 2 }}
+        my={2}
         component={Link}
         variant='body2'
         href='https://github.com/maxmonis'

@@ -7,7 +7,6 @@ import { store } from './app/store'
 import * as serviceWorker from './serviceWorker'
 
 import './localization/i18n'
-import './index.scss'
 
 render(
   <StrictMode>

@@ -109,9 +109,9 @@ const NewListApp = () => {
         gap: 12,
         flexDirection: 'column',
         justifyContent: 'center',
+        m: 'auto',
         minHeight: '75vh',
         py: 12,
-        m: 'auto',
         textAlign: 'center',
       }}>
       <Typography variant='h1'>{t('New List')}</Typography>
@@ -154,8 +154,8 @@ const NewListApp = () => {
         variant='contained'
         size='large'
         sx={{
-          width: 'clamp(15rem, 40vw, 40rem)',
           mx: 'auto',
+          width: 'clamp(15rem, 40vw, 40rem)',
         }}>
         {t('Save')}
       </Button>
