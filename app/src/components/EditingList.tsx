@@ -135,7 +135,7 @@ const EditingList = ({
         </Alert>
       </Snackbar>
       <Box maxWidth='xs' mx='auto'>
-        {selections.length < 3 && (
+        {selections.length < 10 && (
           <Box
             component='form'
             onSubmit={handleSubmit}

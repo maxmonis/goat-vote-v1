@@ -1,12 +1,19 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, forwardRef, ReactElement, Ref } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
+import Slide from '@mui/material/Slide'
 import Typography from '@mui/material/Typography'
+import { TransitionProps } from '@mui/material/transitions'
 
 import EditingList from '../../components/EditingList'
 import LocalStorageService from '../../services/localStorageService'
@@ -29,6 +36,13 @@ interface Thumbnail {
 interface Selection {
   title: string
   thumbnail: Thumbnail
+}
+
+interface List {
+  selections: Selection[]
+  sport: string
+  category: string
+  timeframe: string
 }
 
 const defaultTimeframes = [
@@ -90,27 +104,51 @@ const options: Options = {
     categories: footballCategories,
   },
 }
+const Transition = forwardRef(
+  (
+    props: TransitionProps & {
+      children: ReactElement
+    },
+    ref: Ref<unknown>
+  ) => <Slide direction='up' ref={ref} {...props} />
+)
 
 const NewListApp = () => {
   const localStorageService = new LocalStorageService()
   const { t } = useTranslation()
-  const [selectedSport, setSelectedSport] = useState('basketball')
-  const [selectedTimeframe, setSelectedTimeframe] = useState('all-time')
-  const [selectedCategory, setSelectedCategory] = useState('player')
-  const initialSelections =
-    (localStorageService.get('wip_list') as Selection[]) || []
-  const [selections, setSelections] = useState<Selection[]>(initialSelections)
+  const list = (localStorageService.get('wip_list') as List) || {}
+  const [selectedSport, setSelectedSport] = useState(list.sport || 'basketball')
+  const [selectedTimeframe, setSelectedTimeframe] = useState(
+    list.timeframe || 'all-time'
+  )
+  const [selectedCategory, setSelectedCategory] = useState(
+    list.category || 'player'
+  )
+  const [selections, setSelections] = useState<Selection[]>(
+    list.selections || []
+  )
   const [isEditing, setIsEditing] = useState(selections.length > 0)
+  const [isDialogOpen, setDialogVisibility] = useState(false)
 
-  const handleClick = () => {
+  const handleClickOpen = () => setDialogVisibility(true)
+  const handleClose = () => setDialogVisibility(false)
+
+  const changeCategory = () => {
     setIsEditing(false)
     setSelections([])
+    handleClose()
   }
 
   useEffect(() => {
-    localStorageService.set('wip_list', selections)
+    const list: List = {
+      selections,
+      sport: selectedSport,
+      category: selectedCategory,
+      timeframe: selectedTimeframe,
+    }
+    localStorageService.set('wip_list', list)
     //eslint-disable-next-line
-  }, [selections])
+  }, [selections, selectedSport, selectedCategory, selectedTimeframe])
 
   return (
     <Container
@@ -197,16 +235,38 @@ const NewListApp = () => {
             sx={{
               width: '100%',
               flexGrow: 1,
-              mb: 80,
+              mb: 50,
             }}>
             {t('Save')}
           </Button>
         )}
         {isEditing && (
-          <Button onClick={handleClick} size='small'>
+          <Button
+            onClick={() =>
+              selections.length ? handleClickOpen() : changeCategory()
+            }
+            size='small'>
             {t('Change Category')}
           </Button>
         )}
+        <Dialog
+          open={isDialogOpen}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleClose}
+          aria-describedby='change-category-description'>
+          <DialogTitle>{'Discard changes?'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id='change-category-description'>
+              Changing categories will delete your current list. This action is
+              irreversible.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={changeCategory}>Discard</Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </Container>
   )
