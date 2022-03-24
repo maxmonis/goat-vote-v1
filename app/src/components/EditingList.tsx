@@ -12,16 +12,15 @@ import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
-import IconButton from '@mui/material/IconButton'
+import ClearIcon from '@mui/icons-material/Clear'
+import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 import List from '@mui/material/List'
 import MenuItem from '@mui/material/MenuItem'
 import SearchIcon from '@mui/icons-material/Search'
 import Snackbar from '@mui/material/Snackbar'
-import Typography from '@mui/material/Typography'
 
 import SelectionsList from './SelectionsList'
-import LocalStorageService from '../services/localStorageService'
 import useDebounce from '../hooks/useDebounce'
 import { getInitials } from '../functions/helpers'
 import searchWiki from '../functions/searchWiki'
@@ -48,7 +47,6 @@ const EditingList = ({
   setSelections,
   sport,
 }: EditingListProps) => {
-  const localStorageService = new LocalStorageService()
   const { t } = useTranslation()
   const [appliedQuery, setAppliedQuery] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -108,11 +106,6 @@ const EditingList = ({
   }
 
   useEffect(() => {
-    localStorageService.set('wip_list', selections)
-    //eslint-disable-next-line
-  }, [selections])
-
-  useEffect(() => {
     if (debouncedQuery.length > 3 && !availableOptions.length)
       fetchOptions(wikiQuery)
     //eslint-disable-next-line
@@ -142,46 +135,59 @@ const EditingList = ({
         </Alert>
       </Snackbar>
       <Box maxWidth='xs' mx='auto'>
-        <Box
-          component='form'
-          onSubmit={handleSubmit}
-          noValidate
-          alignItems='center'
-          display='flex'
-          gap={1}>
-          <TextField
-            autoFocus
-            autoComplete='off'
-            label={t('Search players')}
-            value={wikiQuery}
-            onChange={e => setWikiQuery(e.target.value)}
-          />
-          <IconButton type='submit'>
-            <SearchIcon />
-          </IconButton>
-        </Box>
-        {Boolean(appliedQuery) && (
-          <Typography
-            mt={1}
-            maxWidth='15rem'
-            whiteSpace='break-spaces'
-            variant='body2'
-            color={availableOptions.length ? '' : 'error.light'}
-            textAlign='left'>
-            {t(
-              availableOptions.length
-                ? `Showing results for '{{query}}'`
-                : `No results for '{{query}}'`,
-              { query: appliedQuery }
-            )}
-          </Typography>
+        {selections.length < 3 && (
+          <Box
+            component='form'
+            onSubmit={handleSubmit}
+            noValidate
+            alignItems='center'
+            display='flex'
+            gap={1}>
+            <TextField
+              autoFocus
+              autoComplete='off'
+              error={
+                Boolean(appliedQuery) &&
+                appliedQuery === wikiQuery &&
+                availableOptions.length === 0
+              }
+              inputProps={{
+                maxLength: 25,
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='start'>
+                    {Boolean(wikiQuery) ? (
+                      <ClearIcon
+                        sx={{ cursor: 'pointer' }}
+                        onClick={resetSearch}
+                      />
+                    ) : (
+                      <SearchIcon />
+                    )}
+                  </InputAdornment>
+                ),
+              }}
+              label={t('Search players')}
+              value={wikiQuery}
+              onChange={e => setWikiQuery(e.target.value)}
+              helperText={t(
+                availableOptions.length
+                  ? `Showing results for '{{query}}'`
+                  : Boolean(appliedQuery) && appliedQuery === wikiQuery
+                  ? `No results for '{{query}}'`
+                  : '',
+                { query: appliedQuery }
+              )}
+            />
+          </Box>
         )}
         {isLoading && (
           <Box mt={8}>
             <CircularProgress />
           </Box>
         )}
-        {availableOptions.length > 0 && (
+        {availableOptions.length > 0 && !isLoading && (
           <List sx={{ mt: 3 }}>
             {availableOptions.map(
               ({ title, thumbnail: { height, source, width } }) => (
@@ -211,13 +217,6 @@ const EditingList = ({
               )
             )}
           </List>
-        )}
-        {Boolean(appliedQuery) && (
-          <Box mt={5}>
-            <Button size='small' onClick={resetSearch}>
-              {t('Clear query')}
-            </Button>
-          </Box>
         )}
       </Box>
       {selections.length > 0 && (

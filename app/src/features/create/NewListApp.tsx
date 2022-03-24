@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
@@ -100,7 +100,18 @@ const NewListApp = () => {
   const initialSelections =
     (localStorageService.get('wip_list') as Selection[]) || []
   const [selections, setSelections] = useState<Selection[]>(initialSelections)
-  const handleClick = () => {}
+  const [isEditing, setIsEditing] = useState(selections.length > 0)
+
+  const handleClick = () => {
+    setIsEditing(false)
+    setSelections([])
+  }
+
+  useEffect(() => {
+    localStorageService.set('wip_list', selections)
+    //eslint-disable-next-line
+  }, [selections])
+
   return (
     <Container
       maxWidth='lg'
@@ -114,51 +125,89 @@ const NewListApp = () => {
         py: 12,
         textAlign: 'center',
       }}>
-      <Typography variant='h1'>{t('New List')}</Typography>
-      <Box display='flex' flexWrap='wrap' gap={2} justifyContent='center'>
-        <Select
-          value={selectedCategory}
-          onChange={e => setSelectedCategory(e.target.value)}>
-          {options[selectedSport].categories.map(category => (
-            <MenuItem key={category} value={category}>
-              The best {category}
-            </MenuItem>
-          ))}
-        </Select>
-        <Select
-          value={selectedSport}
-          onChange={e => setSelectedSport(e.target.value)}>
-          {Object.keys(options).map(sport => (
-            <MenuItem key={sport} value={sport}>
-              in {sport}
-            </MenuItem>
-          ))}
-        </Select>
-        <Select
-          value={selectedTimeframe}
-          onChange={e => setSelectedTimeframe(e.target.value)}>
-          {options[selectedSport].timeframes.map(timeframe => (
-            <MenuItem key={timeframe} value={timeframe}>
-              {timeframe.match(/-/) ? 'of' : 'of the'} {timeframe}
-            </MenuItem>
-          ))}
-        </Select>
+      {isEditing ? (
+        <Box>
+          <Typography variant='h2' sx={{ maxWidth: '20ch', mx: 'auto' }}>
+            The best {selectedCategory} in {selectedSport}{' '}
+            {selectedTimeframe.match(/-/) ? 'of' : 'of the'} {selectedTimeframe}
+          </Typography>
+        </Box>
+      ) : (
+        <Box>
+          <Typography variant='h1'>{t('New List')}</Typography>
+          <Box
+            display='flex'
+            flexWrap='wrap'
+            gap={2}
+            justifyContent='center'
+            mt={8}>
+            <Select
+              value={selectedCategory}
+              onChange={e => setSelectedCategory(e.target.value)}>
+              {options[selectedSport].categories.map(category => (
+                <MenuItem key={category} value={category}>
+                  The best {category}
+                </MenuItem>
+              ))}
+            </Select>
+            <Select
+              value={selectedSport}
+              onChange={e => setSelectedSport(e.target.value)}>
+              {Object.keys(options).map(sport => (
+                <MenuItem key={sport} value={sport}>
+                  in {sport}
+                </MenuItem>
+              ))}
+            </Select>
+            <Select
+              value={selectedTimeframe}
+              onChange={e => setSelectedTimeframe(e.target.value)}>
+              {options[selectedSport].timeframes.map(timeframe => (
+                <MenuItem key={timeframe} value={timeframe}>
+                  {timeframe.match(/-/) ? 'of' : 'of the'} {timeframe}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+        </Box>
+      )}
+      {isEditing ? (
+        <EditingList
+          selections={selections}
+          setSelections={setSelections}
+          sport={selectedSport}
+        />
+      ) : (
+        <Button
+          onClick={() => setIsEditing(true)}
+          variant='contained'
+          size='large'
+          sx={{
+            mx: 'auto',
+            width: 'min(80vw, 20rem)',
+          }}>
+          {t('Add Players')}
+        </Button>
+      )}
+      <Box width='min(80vw, 20rem)' mx='auto'>
+        {selections.length > 0 && (
+          <Button
+            variant='contained'
+            size='large'
+            sx={{
+              width: '100%',
+              flexGrow: 1,
+              mb: 80,
+            }}>
+            {t('Save')}
+          </Button>
+        )}
+        {isEditing && (
+          <Button onClick={handleClick} size='small'>
+            {t('Change Category')}
+          </Button>
+        )}
       </Box>
-      <EditingList
-        selections={selections}
-        setSelections={setSelections}
-        sport={selectedSport}
-      />
-      <Button
-        onClick={handleClick}
-        variant='contained'
-        size='large'
-        sx={{
-          mx: 'auto',
-          width: 'clamp(15rem, 40vw, 40rem)',
-        }}>
-        {t('Save')}
-      </Button>
     </Container>
   )
 }

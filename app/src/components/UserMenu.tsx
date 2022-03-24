@@ -1,9 +1,6 @@
 import { useState, MouseEvent } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  GoogleLogin,
-  GoogleLogout,
-} from 'react-google-login'
+import { GoogleLogin, GoogleLogout } from 'react-google-login'
 import { useTranslation } from 'react-i18next'
 
 import Avatar from '@mui/material/Avatar'
@@ -64,13 +61,13 @@ const UserMenu = () => {
           onClick={handleCloseUserMenu}>
           {t('New List')}
         </MenuItem>
-        <MenuItem key='Google Logout' onClick={handleCloseUserMenu}>
+        <Box p={3} key='Google Logout' onClick={handleCloseUserMenu}>
           <GoogleLogout
             clientId={clientId}
             buttonText={t('Logout')}
             onLogoutSuccess={() => dispatch(resetUser())}
           />
-        </MenuItem>
+        </Box>
       </Menu>
     </Box>
   ) : (

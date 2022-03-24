@@ -28,7 +28,7 @@ const Footer = () => {
         </Link>
       </Typography>
       <Typography
-        my={2}
+        mb={2}
         component={Link}
         variant='body2'
         href='https://github.com/maxmonis'
