@@ -7,10 +7,10 @@ const fetchSportsResults = require('../utilities/fetchSportsResults')
 router.get('/sports/:sport', auth, async (req, res) => {
   try {
     const {
-      query: { name },
+      query: { term, timeframe },
       params: { sport },
     } = req
-    const results = await fetchSportsResults(name, sport)
+    const results = await fetchSportsResults(term, sport, timeframe)
     res.json(results)
   } catch (err) {
     console.log(err.message)

@@ -40,12 +40,16 @@ interface EditingListProps {
   selections: Selection[]
   setSelections: Dispatch<SetStateAction<Selection[]>>
   sport: string
+  category: string
+  timeframe: string
 }
 
 const EditingList = ({
   selections,
   setSelections,
   sport,
+  category,
+  timeframe,
 }: EditingListProps) => {
   const { t } = useTranslation()
   const [appliedQuery, setAppliedQuery] = useState('')
@@ -73,7 +77,7 @@ const EditingList = ({
     if (isLoading) return
     setIsLoading(true)
     try {
-      const res = await searchWiki(query, sport)
+      const res = await searchWiki({ query, sport, category, timeframe })
       setAvailableOptions(res.options)
       setAppliedQuery(res.term)
     } catch (error) {

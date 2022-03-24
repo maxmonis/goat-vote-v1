@@ -214,6 +214,8 @@ const NewListApp = () => {
           selections={selections}
           setSelections={setSelections}
           sport={selectedSport}
+          category={selectedCategory}
+          timeframe={selectedTimeframe}
         />
       ) : (
         <Button

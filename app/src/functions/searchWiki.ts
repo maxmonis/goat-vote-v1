@@ -1,8 +1,20 @@
 import axios from 'axios'
 
-const searchWiki = async (name: string, sport: string) => {
+interface SearchParams {
+  query: string
+  sport: string
+  category: string
+  timeframe: string
+}
+
+const searchWiki = async ({
+  query,
+  sport,
+  category,
+  timeframe,
+}: SearchParams) => {
   const { data } = await axios.get(`api/search/sports/${sport}`, {
-    params: { name },
+    params: { term: query, category, timeframe },
   })
   return data
 }
