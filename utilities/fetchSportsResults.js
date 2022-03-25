@@ -9,46 +9,23 @@ async function fetchSportsResults(term, sport, timeframe) {
     action: 'opensearch',
     search: term,
   }
-  const {
-    data: [, results],
-  } = await axios.get(BASE_URL, { params })
-  const allOptions = await _fetchAllOptions(results.join('|'))
-  const optionTitles = allOptions.map(({ title }) => title).join('|')
-  const revisionsPages = await _fetchRevisionsPages(optionTitles)
-  const options = []
-  for (const revisionPage of revisionsPages) {
-    const { title, revisions } = revisionPage
-    const description = revisions[0]['*']
-    if (_isValidOption(description, sport, timeframe)) {
-      const validOption = allOptions.find(option => option.title === title)
-      validOption.thumbnail ||= {}
-      options.push(validOption)
-    }
-  }
+  const { data } = await axios.get(BASE_URL, { params })
+  const revisionsPages = await _fetchPages(data[1].join('|'))
+  const validTitles = revisionsPages.map(({ title, description }) =>
+    _isValidOption(description, sport, timeframe) ? title : null
+  )
+  const optionThumbnails = await _fetchThumbnails(validTitles.join('|'))
+  const options = validTitles.map(title => ({
+    title,
+    thumbnail:
+      optionThumbnails?.find(thumbnailObj => thumbnailObj?.title === title)
+        ?.thumbnail || {},
+  }))
   return { options, term }
 }
 
-async function _fetchAllOptions(titles) {
-  const params = {
-    ...BASE_PARAMS,
-    prop: 'pageimages',
-    pithumbsize: '80',
-    titles,
-  }
-  const {
-    data: {
-      query: { pages },
-    },
-  } = await axios.get(BASE_URL, { params })
-  return Object.values(pages)
-}
-
-async function _fetchRevisionsPages(titles) {
-  const {
-    data: {
-      query: { pages },
-    },
-  } = await axios.get(BASE_URL, {
+async function _fetchPages(titles) {
+  const { data } = await axios.get(BASE_URL, {
     params: {
       ...BASE_PARAMS,
       rvprop: 'content',
@@ -56,33 +33,49 @@ async function _fetchRevisionsPages(titles) {
       titles,
     },
   })
-  return Object.values(pages)
+  return (
+    Object.values(data?.query?.pages || {})?.map(({ title, revisions }) => ({
+      title,
+      description: revisions[0]['*'],
+    })) || []
+  )
+}
+
+async function _fetchThumbnails(titles) {
+  const { data } = await axios.get(BASE_URL, {
+    params: {
+      ...BASE_PARAMS,
+      prop: 'pageimages',
+      pithumbsize: '80',
+      titles,
+    },
+  })
+  return Object.values(data?.query?.pages || {}) || []
 }
 
 function _isValidOption(description, sport, timeframe) {
-  const optionProps = description.split('\n').filter(str => str[0] === '|')
+  const descriptionArr = description.split('\n')
+  const descriptionRegex = new RegExp('short description', 'i')
+  const sportRegex = new RegExp(sport, 'i')
+  const shortDescription = descriptionArr.find(str =>
+    str.match(descriptionRegex)
+  )
+  if (!shortDescription?.match(sportRegex)) return false
+  const optionProps = descriptionArr.filter(str => str[0] === '|')
   switch (sport) {
     case 'baseball':
-      return (
-        description.match(/mlb/i) &&
-        _isValidBaseballPlayer(optionProps, timeframe)
-      )
+      return _isValidBaseballPlayer(optionProps, timeframe)
     case 'basketball':
-      return (
-        description.match(/nba/i) &&
-        _isValidBasketballPlayer(optionProps, timeframe)
-      )
+      return _isValidBasketballPlayer(optionProps, timeframe)
     case 'football':
-      return (
-        description.match(/nfl/i) &&
-        _isValidFootballPlayer(optionProps, timeframe)
-      )
+      return _isValidFootballPlayer(optionProps, timeframe)
   }
 }
 
 function _getProp(props, propName) {
+  const regex = new RegExp(propName, 'i')
   return props
-    .find(prop => prop?.includes(propName))
+    .find(prop => prop?.match(regex))
     ?.split('=')[1]
     ?.trim()
 }
@@ -94,15 +87,17 @@ function _isValidBaseballPlayer(optionProps, timeframe) {
 }
 
 function _isValidBasketballPlayer(optionProps, timeframe) {
-  let debutYear = Number(_getProp(optionProps, 'career_start'))
-  debutYear ||= Number(_getProp(optionProps, 'draftyear'))
+  const debutYear =
+    Number(_getProp(optionProps, 'career_start')) ||
+    Number(_getProp(optionProps, 'draftyear'))
   if (!debutYear) return false
   return _isValidTimeframe(timeframe, debutYear)
 }
 
 function _isValidFootballPlayer(optionProps, timeframe) {
-  let debutYear = Number(_getProp(optionProps, 'draftyear'))
-  debutYear ||= Number(_getProp(optionProps, 'career_start'))
+  const debutYear =
+    Number(_getProp(optionProps, 'career_start')) ||
+    Number(_getProp(optionProps, 'draftyear'))
   if (!debutYear) return false
   return _isValidTimeframe(timeframe, debutYear)
 }
