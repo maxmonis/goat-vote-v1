@@ -4,18 +4,25 @@ const BASE_URL = 'https://en.wikipedia.org/w/api.php'
 const BASE_PARAMS = { format: 'json', origin: '*', action: 'query' }
 
 async function fetchSportsResults(term, sport, timeframe) {
+  const defaultResult = { options: [], term }
   const params = {
     ...BASE_PARAMS,
     action: 'opensearch',
     search: term,
   }
   const { data } = await axios.get(BASE_URL, { params })
-  const revisionsPages = await _fetchPages(data[1].join('|'))
-  const validTitles = revisionsPages.map(({ title, description }) =>
-    _isValidOption(description, sport, timeframe) ? title : null
-  )
-  const optionThumbnails = await _fetchThumbnails(validTitles.join('|'))
-  const options = validTitles.map(title => ({
+  const pageNames = data[1]
+  if (!pageNames.length) return defaultResult
+  const revisionsPages = await _fetchPages(pageNames.join('|'))
+  if (!revisionsPages.length) return defaultResult
+  const allTitles = revisionsPages
+    .filter(({ description }) => _isValidOption(description, sport, timeframe))
+    .map(({ title }) => title)
+  if (!allTitles.length) return defaultResult
+  const optionThumbnails = allTitles.length
+    ? await _fetchThumbnails(allTitles.join('|'))
+    : []
+  const options = allTitles.map(title => ({
     title,
     thumbnail:
       optionThumbnails?.find(thumbnailObj => thumbnailObj?.title === title)
@@ -46,7 +53,7 @@ async function _fetchThumbnails(titles) {
     params: {
       ...BASE_PARAMS,
       prop: 'pageimages',
-      pithumbsize: '80',
+      pithumbsize: '100',
       titles,
     },
   })
