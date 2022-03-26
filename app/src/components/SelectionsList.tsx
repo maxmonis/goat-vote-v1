@@ -95,8 +95,8 @@ const SelectionsList = ({ selections, setSelections }: SelectionsListProps) => {
                         {Boolean(source) ? (
                           <Avatar
                             sx={{
-                              height,
-                              width,
+                              height: Number(height) / 4,
+                              width: Number(width) / 4,
                               maxWidth: 1 / 4,
                             }}
                             alt={title}
@@ -106,6 +106,7 @@ const SelectionsList = ({ selections, setSelections }: SelectionsListProps) => {
                           <Avatar
                             sx={{
                               height: 60,
+                              my: 5,
                               width: 60,
                             }}
                             alt={title}>

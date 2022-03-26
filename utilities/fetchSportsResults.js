@@ -53,7 +53,7 @@ async function _fetchThumbnails(titles) {
     params: {
       ...BASE_PARAMS,
       prop: 'pageimages',
-      pithumbsize: '100',
+      pithumbsize: '400',
       titles,
     },
   })

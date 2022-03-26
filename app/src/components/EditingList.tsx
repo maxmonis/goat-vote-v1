@@ -58,7 +58,7 @@ const EditingList = ({
   const [snackbarText, setSnackbarText] = useState('')
   const [availableOptions, setAvailableOptions] = useState<Selection[]>([])
   const [wikiQuery, setWikiQuery] = useState('')
-  const debouncedQuery = useDebounce(wikiQuery, 500)
+  const debouncedQuery = useDebounce(wikiQuery, 700)
 
   const resetSearch = () => {
     setWikiQuery('')
@@ -160,7 +160,7 @@ const EditingList = ({
               }}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position='start'>
+                  <InputAdornment position='end'>
                     {Boolean(wikiQuery) ? (
                       <ClearIcon
                         sx={{ cursor: 'pointer' }}
@@ -196,12 +196,12 @@ const EditingList = ({
             {availableOptions.map(
               ({ title, thumbnail: { height, source, width } }) => (
                 <MenuItem key={title} onClick={() => handleClick(title)}>
-                  {Boolean(width) ? (
+                  {Boolean(source) ? (
                     <Avatar
                       sx={{
-                        height: Number(height) / 2,
+                        height: Number(height) / 8,
                         mr: 2,
-                        width: Number(width) / 2,
+                        width: Number(width) / 8,
                       }}
                       alt={title}
                       src={source}
@@ -209,9 +209,9 @@ const EditingList = ({
                   ) : (
                     <Avatar
                       sx={{
-                        height: 40,
+                        height: 50,
                         mr: 2,
-                        width: 40,
+                        width: 50,
                       }}>
                       {getInitials(title)}
                     </Avatar>
