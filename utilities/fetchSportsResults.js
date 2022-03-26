@@ -23,7 +23,7 @@ async function fetchSportsResults(term, sport, timeframe) {
     ? await _fetchThumbnails(allTitles.join('|'))
     : []
   const options = allTitles.map(title => ({
-    title,
+    title: title.split(' (')[0],
     thumbnail:
       optionThumbnails?.find(thumbnailObj => thumbnailObj?.title === title)
         ?.thumbnail || {},
@@ -61,13 +61,23 @@ async function _fetchThumbnails(titles) {
 }
 
 function _isValidOption(description, sport, timeframe) {
-  const descriptionArr = description.split('\n')
-  const descriptionRegex = new RegExp('short description', 'i')
+  const leagues = {
+    baseball: 'MLB',
+    basketball: 'NBA',
+    football: 'NFL',
+  }
   const sportRegex = new RegExp(sport, 'i')
+  const leagueRegex = new RegExp(leagues[sport], 'i')
+  const descriptionRegex = new RegExp('short description', 'i')
+  const descriptionArr = description.split('\n')
   const shortDescription = descriptionArr.find(str =>
     str.match(descriptionRegex)
   )
-  if (!shortDescription?.match(sportRegex)) return false
+  if (
+    !shortDescription?.match(sportRegex) &&
+    !shortDescription?.match(leagueRegex)
+  )
+    return false
   const optionProps = descriptionArr.filter(str => str[0] === '|')
   switch (sport) {
     case 'baseball':

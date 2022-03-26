@@ -113,9 +113,7 @@ const SelectionsList = ({ selections, setSelections }: SelectionsListProps) => {
                             {getInitials(title)}
                           </Avatar>
                         )}
-                        <Typography variant='h6'>
-                          {title.split(' (')[0]}
-                        </Typography>
+                        <Typography variant='h6'>{title}</Typography>
                       </Box>
                       <Box>
                         <IconButton onClick={() => removeSelection(title)}>
