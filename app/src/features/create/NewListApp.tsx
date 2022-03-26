@@ -27,15 +27,11 @@ interface Options {
   [key: string]: SportOptions
 }
 
-interface Thumbnail {
-  source: string
-  height: string
-  width: string
-}
-
 interface Selection {
+  height: string
+  source: string
   title: string
-  thumbnail: Thumbnail
+  width: string
 }
 
 interface List {

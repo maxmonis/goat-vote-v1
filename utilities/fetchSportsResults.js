@@ -12,21 +12,18 @@ async function fetchSportsResults(term, sport, timeframe) {
   }
   const { data } = await axios.get(BASE_URL, { params })
   const pageNames = data[1]
-  if (!pageNames.length) return defaultResult
-  const revisionsPages = await _fetchPages(pageNames.join('|'))
-  if (!revisionsPages.length) return defaultResult
-  const allTitles = revisionsPages
-    .filter(({ description }) => _isValidOption(description, sport, timeframe))
+  if (!pageNames?.length) return defaultResult
+  const allPages = await _fetchPages(pageNames.join('|'))
+  if (!allPages?.length) return defaultResult
+  const validTitles = allPages
+    .filter(({ content }) => _isValidOption(content, sport, timeframe))
     .map(({ title }) => title)
-  if (!allTitles.length) return defaultResult
-  const optionThumbnails = allTitles.length
-    ? await _fetchThumbnails(allTitles.join('|'))
-    : []
-  const options = allTitles.map(title => ({
-    title: title.split(' (')[0],
-    thumbnail:
-      optionThumbnails?.find(thumbnailObj => thumbnailObj?.title === title)
-        ?.thumbnail || {},
+  if (!validTitles?.length) return defaultResult
+  const optionThumbnails = await _fetchThumbnails(validTitles.join('|'))
+  const options = validTitles.map(title => ({
+    title,
+    ...(optionThumbnails?.find(thumbnailObj => thumbnailObj?.title === title)
+      ?.thumbnail || {}),
   }))
   return { options, term }
 }
@@ -43,7 +40,7 @@ async function _fetchPages(titles) {
   return (
     Object.values(data?.query?.pages || {})?.map(({ title, revisions }) => ({
       title,
-      description: revisions[0]['*'],
+      content: revisions[0]['*'],
     })) || []
   )
 }
@@ -60,7 +57,7 @@ async function _fetchThumbnails(titles) {
   return Object.values(data?.query?.pages || {}) || []
 }
 
-function _isValidOption(description, sport, timeframe) {
+function _isValidOption(content, sport, timeframe) {
   const leagues = {
     baseball: 'MLB',
     basketball: 'NBA',
@@ -69,16 +66,11 @@ function _isValidOption(description, sport, timeframe) {
   const sportRegex = new RegExp(sport, 'i')
   const leagueRegex = new RegExp(leagues[sport], 'i')
   const descriptionRegex = new RegExp('short description', 'i')
-  const descriptionArr = description.split('\n')
-  const shortDescription = descriptionArr.find(str =>
-    str.match(descriptionRegex)
-  )
-  if (
-    !shortDescription?.match(sportRegex) &&
-    !shortDescription?.match(leagueRegex)
-  )
+  const contentArr = content.split('\n')
+  const description = contentArr.find(str => str.match(descriptionRegex))
+  if (!description?.match(sportRegex) && !description?.match(leagueRegex))
     return false
-  const optionProps = descriptionArr.filter(str => str[0] === '|')
+  const optionProps = contentArr.filter(str => str[0] === '|')
   switch (sport) {
     case 'baseball':
       return _isValidBaseballPlayer(optionProps, timeframe)
@@ -98,25 +90,31 @@ function _getProp(props, propName) {
 }
 
 function _isValidBaseballPlayer(optionProps, timeframe) {
-  const debutYear = Number(_getProp(optionProps, 'debutyear'))
+  const debutYear = _extractYear(optionProps, 'debutyear')
   if (!debutYear) return false
   return _isValidTimeframe(timeframe, debutYear)
 }
 
 function _isValidBasketballPlayer(optionProps, timeframe) {
   const debutYear =
-    Number(_getProp(optionProps, 'career_start')) ||
-    Number(_getProp(optionProps, 'draftyear'))
+    _extractYear(optionProps, 'career_start') ||
+    _extractYear(optionProps, 'draftyear')
   if (!debutYear) return false
   return _isValidTimeframe(timeframe, debutYear)
 }
 
 function _isValidFootballPlayer(optionProps, timeframe) {
   const debutYear =
-    Number(_getProp(optionProps, 'career_start')) ||
-    Number(_getProp(optionProps, 'draftyear'))
+    _extractYear(optionProps, 'draftyear') ||
+    _extractYear(optionProps, 'undraftedyear') ||
+    _extractYear(optionProps, 'suppdraftyear')
   if (!debutYear) return false
   return _isValidTimeframe(timeframe, debutYear)
+}
+
+function _extractYear(optionProps, propName) {
+  const rawVal = _getProp(optionProps, propName)
+  return Number(rawVal?.replace(/[^0-9]/g, '').slice(0, 4))
 }
 
 function _isValidTimeframe(timeframe, debutYear) {

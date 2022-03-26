@@ -25,15 +25,11 @@ import useDebounce from '../hooks/useDebounce'
 import { getInitials } from '../functions/helpers'
 import searchWiki from '../functions/searchWiki'
 
-interface Thumbnail {
-  source: string
-  height: string
-  width: string
-}
-
 interface Selection {
+  height: string
+  source: string
   title: string
-  thumbnail: Thumbnail
+  width: string
 }
 
 interface EditingListProps {
@@ -193,33 +189,31 @@ const EditingList = ({
         )}
         {availableOptions.length > 0 && !isLoading && (
           <List sx={{ mt: 3 }}>
-            {availableOptions.map(
-              ({ title, thumbnail: { height, source, width } }) => (
-                <MenuItem key={title} onClick={() => handleClick(title)}>
-                  {Boolean(source) ? (
-                    <Avatar
-                      sx={{
-                        height: Number(height) / 8,
-                        mr: 2,
-                        width: Number(width) / 8,
-                      }}
-                      alt={title}
-                      src={source}
-                    />
-                  ) : (
-                    <Avatar
-                      sx={{
-                        height: 50,
-                        mr: 2,
-                        width: 50,
-                      }}>
-                      {getInitials(title)}
-                    </Avatar>
-                  )}
-                  {title}
-                </MenuItem>
-              )
-            )}
+            {availableOptions.map(({ title, height, source, width }) => (
+              <MenuItem key={title} onClick={() => handleClick(title)}>
+                {Boolean(source) ? (
+                  <Avatar
+                    sx={{
+                      height: Number(height) / 8,
+                      mr: 2,
+                      width: Number(width) / 8,
+                    }}
+                    alt={title}
+                    src={source}
+                  />
+                ) : (
+                  <Avatar
+                    sx={{
+                      height: 45,
+                      mr: 2,
+                      width: 45,
+                    }}>
+                    {getInitials(title)}
+                  </Avatar>
+                )}
+                {title.split(' (')[0]}
+              </MenuItem>
+            ))}
           </List>
         )}
       </Box>

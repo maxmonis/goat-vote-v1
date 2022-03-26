@@ -15,15 +15,11 @@ import ListItem from '@mui/material/ListItem'
 import { getInitials } from '../functions/helpers'
 import { Typography } from '@mui/material'
 
-interface Thumbnail {
-  source: string
-  height: string
-  width: string
-}
-
 interface Selection {
+  height: string
+  source: string
   title: string
-  thumbnail: Thumbnail
+  width: string
 }
 
 interface SelectionsListProps {
@@ -60,10 +56,7 @@ const SelectionsList = ({ selections, setSelections }: SelectionsListProps) => {
             {...provided.droppableProps}
             sx={{ mx: 'auto' }}>
             {selections.map(
-              (
-                { title, thumbnail: { width, height, source } }: Selection,
-                i: number
-              ) => (
+              ({ title, width, height, source }: Selection, i: number) => (
                 <Draggable draggableId={title} index={i} key={title}>
                   {provided => (
                     <ListItem
@@ -113,7 +106,9 @@ const SelectionsList = ({ selections, setSelections }: SelectionsListProps) => {
                             {getInitials(title)}
                           </Avatar>
                         )}
-                        <Typography variant='h6'>{title}</Typography>
+                        <Typography variant='h6'>
+                          {title.split(' (')[0]}
+                        </Typography>
                       </Box>
                       <Box>
                         <IconButton onClick={() => removeSelection(title)}>
