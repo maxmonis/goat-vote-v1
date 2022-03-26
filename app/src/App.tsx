@@ -15,16 +15,16 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import Counter from './features/counter/Counter'
 import Footer from './components/Footer'
 import Header from './components/Header'
-import LocalStorageService from './services/localStorageService'
+import LocalStorageService from './services/LocalStorageService'
 import NewListApp from './features/create/NewListApp'
 
 const App = () => {
-  const localStorageService = new LocalStorageService()
-  const localStorageDarkSetting = localStorageService.get('prefers-dark')
+  const localDark = new LocalStorageService('prefers-dark')
+  const localPrefersDark = localDark.get()
   const browserPrefersDark = useMediaQuery('(prefers-color-scheme: dark)')
   const [dark, setDark] = useState(
-    typeof localStorageDarkSetting === 'boolean'
-      ? localStorageDarkSetting
+    typeof localPrefersDark === 'boolean'
+      ? localPrefersDark
       : Boolean(browserPrefersDark)
   )
   const toggleDark = () => setDark(!dark)
@@ -36,7 +36,7 @@ const App = () => {
   })
   theme = responsiveFontSizes(theme)
   useEffect(() => {
-    localStorageService.set('prefers-dark', Boolean(dark))
+    localDark.set(dark)
     //eslint-disable-next-line
   }, [dark])
   return (

@@ -6,9 +6,9 @@ import {
 } from 'react-google-login'
 
 import refreshToken from '../../functions/refreshToken'
-import LocalStorageService from '../../services/localStorageService'
+import LocalStorageService from '../../services/LocalStorageService'
 
-const localStorageService = new LocalStorageService()
+const localToken = new LocalStorageService('access_token')
 
 const initialState: {
   user: {
@@ -43,7 +43,7 @@ export const authSlice = createSlice({
       }
     },
     resetUser: () => {
-      localStorageService.remove('access_token')
+      localToken.remove()
       return initialState
     },
   },

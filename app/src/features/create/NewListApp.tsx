@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography'
 import { TransitionProps } from '@mui/material/transitions'
 
 import EditingList from '../../components/EditingList'
-import LocalStorageService from '../../services/localStorageService'
+import LocalStorageService from '../../services/LocalStorageService'
 
 interface SportOptions {
   timeframes: string[]
@@ -114,9 +114,9 @@ const Transition = forwardRef(
 )
 
 const NewListApp = () => {
-  const localStorageService = new LocalStorageService()
+  const localList = new LocalStorageService('wip_list')
   const { t } = useTranslation()
-  const list = (localStorageService.get('wip_list') as List) || {}
+  const list = (localList.get() as List) || {}
   const [selectedSport, setSelectedSport] = useState(list.sport || 'basketball')
   const [selectedTimeframe, setSelectedTimeframe] = useState(
     list.timeframe || 'all-time'
@@ -146,7 +146,7 @@ const NewListApp = () => {
       category: selectedCategory,
       timeframe: selectedTimeframe,
     }
-    localStorageService.set('wip_list', list)
+    localList.set(list)
     //eslint-disable-next-line
   }, [selections, selectedSport, selectedCategory, selectedTimeframe])
 

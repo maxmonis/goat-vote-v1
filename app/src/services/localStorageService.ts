@@ -1,18 +1,21 @@
 class LocalStorageService {
-  private storageKey = process.env.REACT_APP_LOCAL_STORAGE_KEY
-  private getFullKey = (key: string) => this.storageKey + key
+  private key: string
 
-  get(key: string): unknown {
-    const res = localStorage.getItem(this.getFullKey(key))
+  constructor(key: string) {
+    this.key = `goat-vote_${key}`
+  }
+
+  get(): unknown {
+    const res = localStorage.getItem(this.key)
     return res ? JSON.parse(res) : null
   }
 
-  set(key: string, payload: unknown) {
-    localStorage.setItem(this.getFullKey(key), JSON.stringify(payload))
+  set(payload: unknown) {
+    localStorage.setItem(this.key, JSON.stringify(payload))
   }
 
-  remove(key: string) {
-    localStorage.removeItem(this.getFullKey(key))
+  remove() {
+    localStorage.removeItem(this.key)
   }
 
   clear() {

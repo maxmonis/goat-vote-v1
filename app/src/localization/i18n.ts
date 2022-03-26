@@ -4,15 +4,15 @@ import detector from 'i18next-browser-languagedetector'
 
 import en from './en.json'
 import es from './es.json'
-import LocalStorageService from '../services/localStorageService'
+import LocalStorageService from '../services/LocalStorageService'
 
 const resources = {
   en: { translation: en },
   es: { translation: es },
 }
 const fallbackLng = 'en'
-const localStorageService = new LocalStorageService()
-const lng = (localStorageService.get('preferred-lng') as string) || fallbackLng
+const localLanguage = new LocalStorageService('preferred-lng')
+const lng = (localLanguage.get() as string) || fallbackLng
 
 i18n
   .use(detector)
