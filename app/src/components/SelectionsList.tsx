@@ -16,10 +16,8 @@ import { getInitials } from '../functions/helpers'
 import { Typography } from '@mui/material'
 
 interface Selection {
-  height: string
   source: string
   title: string
-  width: string
 }
 
 interface SelectionsListProps {
@@ -55,71 +53,73 @@ const SelectionsList = ({ selections, setSelections }: SelectionsListProps) => {
             ref={provided.innerRef}
             {...provided.droppableProps}
             sx={{ mx: 'auto' }}>
-            {selections.map(
-              ({ title, width, height, source }: Selection, i: number) => (
-                <Draggable draggableId={title} index={i} key={title}>
-                  {provided => (
-                    <ListItem
+            {selections.map(({ title, source }, i) => (
+              <Draggable draggableId={title} index={i} key={title}>
+                {provided => (
+                  <ListItem
+                    sx={{
+                      bgcolor: 'background.paper',
+                      border: 1,
+                      display: 'flex',
+                      gap: 4,
+                      justifyContent: 'space-between',
+                      mx: 'auto',
+                      textAlign: 'left',
+                      '&:not(:last-of-type)': {
+                        mb: '-1px',
+                      },
+                    }}
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}>
+                    <Box
+                      {...provided.dragHandleProps}
                       sx={{
-                        bgcolor: 'background.paper',
-                        border: 1,
+                        alignItems: 'center',
                         display: 'flex',
-                        gap: 4,
-                        justifyContent: 'space-between',
-                        mx: 'auto',
+                        gap: 3,
                         textAlign: 'left',
-                        '&:not(:last-of-type)': {
-                          mb: '-1px',
-                        },
-                      }}
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}>
+                      }}>
+                      <Typography variant='h5'>{i + 1}.</Typography>
                       <Box
-                        {...provided.dragHandleProps}
-                        sx={{
-                          alignItems: 'center',
-                          display: 'flex',
-                          gap: 3,
-                          textAlign: 'left',
-                        }}>
-                        <Typography variant='h5'>
-                          {i ? `${i + 1}.` : '🐐'}
-                        </Typography>
+                        sx={{ width: { xs: 45, sm: 60 } }}
+                        display='flex'
+                        justifyContent='center'>
                         {Boolean(source) ? (
                           <Avatar
+                            variant='rounded'
                             sx={{
-                              height: Number(height) / 4,
-                              width: Number(width) / 4,
-                              maxWidth: 1 / 4,
+                              height: { xs: 60, sm: 80 },
+                              maxWidth: { xs: 45, sm: 60 },
+                              width: 'auto',
                             }}
                             alt={title}
                             src={source}
                           />
                         ) : (
                           <Avatar
+                            variant='rounded'
                             sx={{
-                              height: 60,
-                              my: 5,
-                              width: 60,
+                              height: { xs: 60, sm: 80 },
+                              width: { xs: 45, sm: 60 },
                             }}
                             alt={title}>
                             {getInitials(title)}
                           </Avatar>
                         )}
-                        <Typography variant='h6'>
-                          {title.split(' (')[0]}
-                        </Typography>
                       </Box>
-                      <Box>
-                        <IconButton onClick={() => removeSelection(title)}>
-                          <DeleteIcon />
-                        </IconButton>
-                      </Box>
-                    </ListItem>
-                  )}
-                </Draggable>
-              )
-            )}
+                      <Typography variant='h6'>
+                        {title.split(' (')[0]}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <IconButton onClick={() => removeSelection(title)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
+                  </ListItem>
+                )}
+              </Draggable>
+            ))}
             {provided.placeholder}
           </List>
         )}

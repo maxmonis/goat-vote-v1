@@ -14,7 +14,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 
 import Counter from './features/counter/Counter'
 import Footer from './components/Footer'
-import Header from './components/Header'
+import NavBar from './components/NavBar'
 import LocalStorageService from './services/LocalStorageService'
 import NewListApp from './features/create/NewListApp'
 
@@ -44,7 +44,7 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
         <Box>
-          <Header dark={dark} toggleDark={toggleDark} />
+          <NavBar dark={dark} toggleDark={toggleDark} />
           <Container
             maxWidth='lg'
             sx={{
@@ -53,9 +53,8 @@ const App = () => {
               width: '100%',
             }}>
             <Routes>
-              <Route path='/counter' element={<Counter />} />
-              <Route path='/new-list' element={<NewListApp />} />
-              <Route path='/' element={<NewListApp />} />
+              <Route path='/:sport' element={<NewListApp />} />
+              <Route path='/' element={<Counter />} />
             </Routes>
           </Container>
         </Box>

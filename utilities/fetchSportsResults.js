@@ -22,8 +22,9 @@ async function fetchSportsResults(term, sport, timeframe) {
   const optionThumbnails = await _fetchThumbnails(validTitles.join('|'))
   const options = validTitles.map(title => ({
     title,
-    ...(optionThumbnails?.find(thumbnailObj => thumbnailObj?.title === title)
-      ?.thumbnail || {}),
+    source:
+      optionThumbnails?.find(thumbnailObj => thumbnailObj?.title === title)
+        ?.thumbnail?.source || '',
   }))
   return { options, term }
 }

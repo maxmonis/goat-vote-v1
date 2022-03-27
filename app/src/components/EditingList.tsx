@@ -4,6 +4,7 @@ import {
   SyntheticEvent,
   Dispatch,
   SetStateAction,
+  FormEvent,
 } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -26,10 +27,8 @@ import { getInitials } from '../functions/helpers'
 import searchWiki from '../functions/searchWiki'
 
 interface Selection {
-  height: string
   source: string
   title: string
-  width: string
 }
 
 interface EditingListProps {
@@ -100,7 +99,7 @@ const EditingList = ({
     }
   }
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     if (wikiQuery.length > 2) fetchOptions(wikiQuery)
   }
@@ -189,24 +188,27 @@ const EditingList = ({
         )}
         {availableOptions.length > 0 && !isLoading && (
           <List sx={{ mt: 3 }}>
-            {availableOptions.map(({ title, height, source, width }) => (
+            {availableOptions.map(({ title, source }) => (
               <MenuItem key={title} onClick={() => handleClick(title)}>
                 {Boolean(source) ? (
                   <Avatar
+                    variant='rounded'
                     sx={{
-                      height: Number(height) / 8,
+                      height: 40,
                       mr: 2,
-                      width: Number(width) / 8,
+                      maxWidth: 30,
+                      width: 'auto',
                     }}
                     alt={title}
                     src={source}
                   />
                 ) : (
                   <Avatar
+                    variant='rounded'
                     sx={{
-                      height: 45,
+                      height: 40,
                       mr: 2,
-                      width: 45,
+                      width: 30,
                     }}>
                     {getInitials(title)}
                   </Avatar>

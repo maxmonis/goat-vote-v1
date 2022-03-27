@@ -1,5 +1,6 @@
 import { useState, useEffect, forwardRef, ReactElement, Ref } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -16,30 +17,26 @@ import Typography from '@mui/material/Typography'
 import { TransitionProps } from '@mui/material/transitions'
 
 import EditingList from '../../components/EditingList'
-import LocalStorageService from '../../services/LocalStorageService'
 
 interface SportOptions {
   timeframes: string[]
   categories: string[]
 }
 
-interface Options {
-  [key: string]: SportOptions
+type Sport = 'basketball' | 'baseball' | 'football'
+
+type Options = {
+  [key in Sport]: SportOptions
 }
 
 interface Selection {
-  height: string
   source: string
   title: string
-  width: string
 }
 
-interface List {
-  selections: Selection[]
-  sport: string
-  category: string
-  timeframe: string
-}
+const isValidSport = (key?: string): key is Sport =>
+  typeof key === 'string' &&
+  ['basketball', 'baseball', 'football'].includes(key)
 
 const defaultTimeframes = [
   'all-time',
@@ -100,6 +97,7 @@ const options: Options = {
     categories: footballCategories,
   },
 }
+
 const Transition = forwardRef(
   (
     props: TransitionProps & {
@@ -110,19 +108,12 @@ const Transition = forwardRef(
 )
 
 const NewListApp = () => {
-  const localList = new LocalStorageService('wip_list')
   const { t } = useTranslation()
-  const list = (localList.get() as List) || {}
-  const [selectedSport, setSelectedSport] = useState(list.sport || 'basketball')
-  const [selectedTimeframe, setSelectedTimeframe] = useState(
-    list.timeframe || 'all-time'
-  )
-  const [selectedCategory, setSelectedCategory] = useState(
-    list.category || 'player'
-  )
-  const [selections, setSelections] = useState<Selection[]>(
-    list.selections || []
-  )
+  const { sport } = useParams()
+  const selectedSport = isValidSport(sport) ? sport : 'basketball'
+  const [selectedTimeframe, setSelectedTimeframe] = useState('all-time')
+  const [selectedCategory, setSelectedCategory] = useState('player')
+  const [selections, setSelections] = useState<Selection[]>([])
   const [isEditing, setIsEditing] = useState(selections.length > 0)
   const [isDialogOpen, setDialogVisibility] = useState(false)
 
@@ -135,16 +126,14 @@ const NewListApp = () => {
     handleClose()
   }
 
-  useEffect(() => {
-    const list: List = {
-      selections,
-      sport: selectedSport,
-      category: selectedCategory,
-      timeframe: selectedTimeframe,
-    }
-    localList.set(list)
-    //eslint-disable-next-line
-  }, [selections, selectedSport, selectedCategory, selectedTimeframe])
+  const reset = () => {
+    setSelectedCategory('player')
+    setSelectedTimeframe('all-time')
+    setSelections([])
+    setIsEditing(false)
+  }
+
+  useEffect(() => reset(), [selectedSport])
 
   return (
     <Container
@@ -168,7 +157,11 @@ const NewListApp = () => {
         </Box>
       ) : (
         <Box>
-          <Typography variant='h1'>{t('New List')}</Typography>
+          <Typography variant='h1'>
+            {selectedSport.charAt(0).toUpperCase() +
+              selectedSport.substring(1).toLowerCase()}
+          </Typography>
+          <Typography variant='h2'>{t('New List')}</Typography>
           <Box
             display='flex'
             flexWrap='wrap'
@@ -181,15 +174,6 @@ const NewListApp = () => {
               {options[selectedSport].categories.map(category => (
                 <MenuItem key={category} value={category}>
                   The best {category}
-                </MenuItem>
-              ))}
-            </Select>
-            <Select
-              value={selectedSport}
-              onChange={e => setSelectedSport(e.target.value)}>
-              {Object.keys(options).map(sport => (
-                <MenuItem key={sport} value={sport}>
-                  in {sport}
                 </MenuItem>
               ))}
             </Select>
