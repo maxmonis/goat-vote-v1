@@ -23,14 +23,14 @@ const UserMenu = ({ dark, toggleDark }: UserMenuProps) => {
   const { profileObj } = useAppSelector(selectUser)
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [userAnchorEl, setUserAnchorEl] = useState<null | HTMLElement>(null)
 
   const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
+    setUserAnchorEl(event.currentTarget)
   }
 
   const handleCloseUserMenu = () => {
-    setAnchorEl(null)
+    setUserAnchorEl(null)
   }
 
   const clientId = process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID
@@ -48,7 +48,7 @@ const UserMenu = ({ dark, toggleDark }: UserMenuProps) => {
           mt: 10,
         }}
         id='menu-appbar'
-        anchorEl={anchorEl}
+        anchorEl={userAnchorEl}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'right',
@@ -58,7 +58,7 @@ const UserMenu = ({ dark, toggleDark }: UserMenuProps) => {
           vertical: 'top',
           horizontal: 'right',
         }}
-        open={Boolean(anchorEl)}
+        open={Boolean(userAnchorEl)}
         onClose={handleCloseUserMenu}>
         <Container>
           <Tooltip title={t('Toggle dark') as string} placement='left'>
@@ -79,14 +79,50 @@ const UserMenu = ({ dark, toggleDark }: UserMenuProps) => {
       </Menu>
     </Box>
   ) : (
-    <GoogleLogin
-      clientId={clientId}
-      buttonText={t('Login')}
-      onSuccess={e => dispatch(setUser(e))}
-      onFailure={() => dispatch(resetUser())}
-      cookiePolicy='single_host_origin'
-      isSignedIn={true}
-    />
+    <Box>
+      <Tooltip title={t('Account') as string}>
+        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+          <Avatar />
+        </IconButton>
+      </Tooltip>
+      <Menu
+        sx={{
+          mt: 10,
+        }}
+        id='menu-appbar'
+        anchorEl={userAnchorEl}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={Boolean(userAnchorEl)}
+        onClose={handleCloseUserMenu}>
+        <Container>
+          <Tooltip title={t('Toggle dark') as string} placement='left'>
+            <Typography variant='h5'>
+              🌞
+              <Switch checked={dark} onChange={() => toggleDark()} />
+              🌛
+            </Typography>
+          </Tooltip>
+        </Container>
+        <Box p={3} key='Google Logout' onClick={handleCloseUserMenu}>
+          <GoogleLogin
+            clientId={clientId}
+            buttonText={t('Login')}
+            onSuccess={e => dispatch(setUser(e))}
+            onFailure={() => dispatch(resetUser())}
+            cookiePolicy='single_host_origin'
+            isSignedIn={true}
+          />
+        </Box>
+      </Menu>
+    </Box>
   )
 }
 

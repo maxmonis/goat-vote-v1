@@ -190,29 +190,35 @@ const EditingList = ({
           <List sx={{ mt: 3 }}>
             {availableOptions.map(({ title, source }) => (
               <MenuItem key={title} onClick={() => handleClick(title)}>
-                {Boolean(source) ? (
-                  <Avatar
-                    variant='rounded'
-                    sx={{
-                      height: 40,
-                      mr: 2,
-                      maxWidth: 30,
-                      width: 'auto',
-                    }}
-                    alt={title}
-                    src={source}
-                  />
-                ) : (
-                  <Avatar
-                    variant='rounded'
-                    sx={{
-                      height: 40,
-                      mr: 2,
-                      width: 30,
-                    }}>
-                    {getInitials(title)}
-                  </Avatar>
-                )}
+                <Box
+                  sx={{ width: { xs: 45, sm: 60 } }}
+                  display='flex'
+                  justifyContent='center'
+                  flexShrink={0}>
+                  {Boolean(source) ? (
+                    <Avatar
+                      variant='rounded'
+                      sx={{
+                        height: 40,
+                        maxWidth: 30,
+                        width: 'auto',
+                      }}
+                      alt={title}
+                      src={source}
+                    />
+                  ) : (
+                    <Avatar
+                      variant='rounded'
+                      sx={{
+                        height: 30,
+                        my: 1,
+                        px: 4,
+                        width: 30,
+                      }}>
+                      {getInitials(title)}
+                    </Avatar>
+                  )}
+                </Box>
                 {title.split(' (')[0]}
               </MenuItem>
             ))}

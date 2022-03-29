@@ -51,7 +51,7 @@ async function _fetchThumbnails(titles) {
     params: {
       ...BASE_PARAMS,
       prop: 'pageimages',
-      pithumbsize: '400',
+      pithumbsize: '200',
       titles,
     },
   })
@@ -119,7 +119,7 @@ function _extractYear(optionProps, propName) {
 }
 
 function _isValidTimeframe(timeframe, debutYear) {
-  if (timeframe === 'all-time') return true
+  if (['currently', 'all-time'].includes(timeframe)) return true
   const cutoffs = {
     '21st century': { debutedAfter: 1999 },
     '20th century': { debutedBefore: 2000 },

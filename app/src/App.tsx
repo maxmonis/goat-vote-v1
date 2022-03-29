@@ -12,7 +12,6 @@ import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import Counter from './features/counter/Counter'
 import Footer from './components/Footer'
 import NavBar from './components/NavBar'
 import LocalStorageService from './services/LocalStorageService'
@@ -54,7 +53,7 @@ const App = () => {
             }}>
             <Routes>
               <Route path='/:sport' element={<NewListApp />} />
-              <Route path='/' element={<Counter />} />
+              <Route path='/' element={<NewListApp />} />
             </Routes>
           </Container>
         </Box>

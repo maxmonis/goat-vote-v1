@@ -1,6 +1,6 @@
 import { useState, useEffect, forwardRef, ReactElement, Ref } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { useParams, Navigate } from 'react-router-dom'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -40,6 +40,7 @@ const isValidSport = (key?: string): key is Sport =>
 
 const defaultTimeframes = [
   'all-time',
+  'currently',
   '21st century',
   '20th century',
   '2020s',
@@ -133,9 +134,24 @@ const NewListApp = () => {
     setIsEditing(false)
   }
 
+  const getTimeframeText = (key: string) => {
+    switch (key) {
+      case 'all-time':
+        return t('of all time')
+      case 'currently':
+        return t('right now')
+      case 'pre-1920':
+        return t('before 1920')
+      case 'pre-1960':
+        return t('before 1960')
+      default:
+        return t('of the {{decade}}', { decade: key })
+    }
+  }
+
   useEffect(() => reset(), [selectedSport])
 
-  return (
+  return isValidSport(sport) ? (
     <Container
       maxWidth='lg'
       sx={{
@@ -152,7 +168,7 @@ const NewListApp = () => {
         <Box>
           <Typography variant='h2' sx={{ maxWidth: '20ch', mx: 'auto' }}>
             The best {selectedCategory} in {selectedSport}{' '}
-            {selectedTimeframe.match(/-/) ? 'of' : 'of the'} {selectedTimeframe}
+            {getTimeframeText(selectedTimeframe)}
           </Typography>
         </Box>
       ) : (
@@ -182,7 +198,7 @@ const NewListApp = () => {
               onChange={e => setSelectedTimeframe(e.target.value)}>
               {options[selectedSport].timeframes.map(timeframe => (
                 <MenuItem key={timeframe} value={timeframe}>
-                  {timeframe.match(/-/) ? 'of' : 'of the'} {timeframe}
+                  {getTimeframeText(timeframe)}
                 </MenuItem>
               ))}
             </Select>
@@ -251,6 +267,8 @@ const NewListApp = () => {
         </Dialog>
       </Box>
     </Container>
+  ) : (
+    <Navigate to='/basketball' />
   )
 }
 

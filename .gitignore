@@ -13,6 +13,8 @@
 
 config/default.json
 
+/client/
+
 # misc
 .DS_Store
 .env

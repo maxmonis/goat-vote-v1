@@ -83,7 +83,8 @@ const SelectionsList = ({ selections, setSelections }: SelectionsListProps) => {
                       <Box
                         sx={{ width: { xs: 45, sm: 60 } }}
                         display='flex'
-                        justifyContent='center'>
+                        justifyContent='center'
+                        flexShrink={0}>
                         {Boolean(source) ? (
                           <Avatar
                             variant='rounded'
@@ -99,8 +100,9 @@ const SelectionsList = ({ selections, setSelections }: SelectionsListProps) => {
                           <Avatar
                             variant='rounded'
                             sx={{
-                              height: { xs: 60, sm: 80 },
-                              width: { xs: 45, sm: 60 },
+                              height: { xs: 40, sm: 50 },
+                              my: { xs: 2, sm: 3 },
+                              width: { xs: 40, sm: 50 },
                             }}
                             alt={title}>
                             {getInitials(title)}

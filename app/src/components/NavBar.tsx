@@ -18,9 +18,9 @@ import useScrollTrigger from '@mui/material/useScrollTrigger'
 import UserMenu from './UserMenu'
 
 const pages = [
-  { name: 'Baseball', route: 'baseball' },
-  { name: 'Basketball', route: 'basketball' },
-  { name: 'Football', route: 'football' },
+  { name: 'Baseball', route: '/baseball' },
+  { name: 'Basketball', route: '/basketball' },
+  { name: 'Football', route: '/football' },
 ]
 
 interface NavBarProps {
