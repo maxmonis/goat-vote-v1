@@ -17,6 +17,10 @@ import Typography from '@mui/material/Typography'
 import { TransitionProps } from '@mui/material/transitions'
 
 import EditingList from '../../components/EditingList'
+import { selectUser } from '../auth/authSlice'
+
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
+import { addRanking, getAllRankings, selectRankings } from './rankingSlice'
 
 interface SportOptions {
   timeframes: string[]
@@ -109,6 +113,10 @@ const Transition = forwardRef(
 )
 
 const NewListApp = () => {
+  const { profileObj } = useAppSelector(selectUser)
+  const rankings = useAppSelector(selectRankings)
+  console.info(rankings)
+  const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const { sport } = useParams()
   const selectedSport = isValidSport(sport) ? sport : 'basketball'
@@ -150,6 +158,23 @@ const NewListApp = () => {
   }
 
   useEffect(() => reset(), [selectedSport])
+
+  useEffect(() => {
+    dispatch(getAllRankings())
+    // eslint-disable-next-line
+  }, [])
+
+  const handleSave = async () => {
+    const ranking = {
+      creatorID: profileObj?.googleId,
+      creatorName: profileObj?.name,
+      category: selectedSport,
+      timeframe: selectedTimeframe,
+      subcategory: selectedCategory,
+      titles: selections.map(({ title }) => title).join('|'),
+    }
+    await dispatch(addRanking(ranking))
+  }
 
   return isValidSport(sport) ? (
     <Container
@@ -230,6 +255,7 @@ const NewListApp = () => {
           <Button
             variant='contained'
             size='large'
+            onClick={handleSave}
             sx={{
               width: '100%',
               flexGrow: 1,

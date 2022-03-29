@@ -1,13 +1,14 @@
 const express = require('express')
-// const connectDB = require('./config/db')
+const connectDB = require('./config/db')
 const path = require('path')
 
 const app = express()
 
-// connectDB()
+connectDB()
 
 app.use(express.json({ extended: false }))
 
+app.use('/api/rankings', require('./routes/rankings'))
 app.use('/api/search', require('./routes/search'))
 
 if (process.env.NODE_ENV === 'production') {
