@@ -27,9 +27,13 @@ export const rankingSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: builder => {
-    builder.addCase(addRanking.fulfilled, (state, action) => {
-      state.rankings.push(action.payload)
-    })
+    builder
+      .addCase(addRanking.fulfilled, (state, action) => {
+        state.rankings.push(action.payload)
+      })
+      .addCase(getAllRankings.fulfilled, (state, action) => {
+        state.rankings = action.payload
+      })
   },
 })
 

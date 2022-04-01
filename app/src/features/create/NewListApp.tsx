@@ -20,7 +20,7 @@ import EditingList from '../../components/EditingList'
 import { selectUser } from '../auth/authSlice'
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
-import { addRanking, getAllRankings, selectRankings } from './rankingSlice'
+import { addRanking } from './rankingSlice'
 
 interface SportOptions {
   timeframes: string[]
@@ -36,6 +36,15 @@ type Options = {
 interface Selection {
   source: string
   title: string
+}
+
+interface Ranking {
+  creatorID: string
+  creatorName: string
+  category: Sport
+  timeframe: string
+  subcategory: string
+  titles: string
 }
 
 const isValidSport = (key?: string): key is Sport =>
@@ -114,8 +123,6 @@ const Transition = forwardRef(
 
 const NewListApp = () => {
   const { profileObj } = useAppSelector(selectUser)
-  const rankings = useAppSelector(selectRankings)
-  console.info(rankings)
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const { sport } = useParams()
@@ -159,21 +166,26 @@ const NewListApp = () => {
 
   useEffect(() => reset(), [selectedSport])
 
-  useEffect(() => {
-    dispatch(getAllRankings())
-    // eslint-disable-next-line
-  }, [])
-
   const handleSave = async () => {
-    const ranking = {
-      creatorID: profileObj?.googleId,
-      creatorName: profileObj?.name,
-      category: selectedSport,
-      timeframe: selectedTimeframe,
-      subcategory: selectedCategory,
-      titles: selections.map(({ title }) => title).join('|'),
+    if (
+      typeof profileObj?.googleId === 'string' &&
+      typeof profileObj?.name === 'string'
+    ) {
+      const ranking: Ranking = {
+        creatorID: profileObj.googleId,
+        creatorName: profileObj.name,
+        category: selectedSport,
+        timeframe: selectedTimeframe,
+        subcategory: selectedCategory,
+        titles: selections.map(({ title }) => title).join('|'),
+      }
+      try {
+        await dispatch(addRanking(ranking))
+        reset()
+      } catch (error) {
+        console.error(error)
+      }
     }
-    await dispatch(addRanking(ranking))
   }
 
   return isValidSport(sport) ? (

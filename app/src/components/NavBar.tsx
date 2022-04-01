@@ -61,13 +61,21 @@ const NavBar = ({ dark, toggleDark }: NavBarProps) => {
         <Container maxWidth='xl'>
           <Toolbar disableGutters>
             <Typography
-              variant='h6'
-              noWrap
-              component='div'
-              sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}>
-              GoatVote
+              variant='h3'
+              component={Link}
+              to='/'
+              sx={{
+                mr: 3,
+                textDecoration: 'none',
+                display: { xs: 'none', md: 'flex' },
+              }}>
+              🐐
             </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <Box
+              flexGrow={1}
+              sx={{
+                display: { xs: 'flex', md: 'none' },
+              }}>
               <IconButton
                 size='large'
                 aria-label='account of current user'
@@ -105,21 +113,37 @@ const NavBar = ({ dark, toggleDark }: NavBarProps) => {
                 ))}
               </Menu>
             </Box>
-            <Typography
-              variant='h6'
-              noWrap
-              component='div'
-              sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-              GoatVote
-            </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            <Box
+              flexGrow={1}
+              sx={{
+                display: { xs: 'flex', md: 'none' },
+              }}>
+              <Typography
+                variant='h2'
+                component={Link}
+                to='/'
+                sx={{
+                  textDecoration: 'none',
+                }}>
+                🐐
+              </Typography>
+            </Box>
+            <Box
+              flexGrow={1}
+              sx={{
+                display: { xs: 'none', md: 'flex' },
+              }}>
               {pages.map(({ name, route }) => (
                 <Button
                   component={Link}
                   to={route}
                   key={route}
                   onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}>
+                  sx={{
+                    my: 2,
+                    color: 'white',
+                    display: 'block',
+                  }}>
                   {name}
                 </Button>
               ))}

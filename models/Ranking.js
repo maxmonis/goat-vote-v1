@@ -9,16 +9,22 @@ const RankingSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
   category: {
     type: String,
     required: true,
   },
   timeframe: {
     type: String,
+    required: true,
   },
   subcategory: {
     type: String,
-    default: [],
+    required: true,
   },
   titles: {
     type: String,

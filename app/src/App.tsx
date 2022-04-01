@@ -16,6 +16,7 @@ import Footer from './components/Footer'
 import NavBar from './components/NavBar'
 import LocalStorageService from './services/LocalStorageService'
 import NewListApp from './features/create/NewListApp'
+import Home from './pages/Home'
 
 const App = () => {
   const localDark = new LocalStorageService('prefers-dark')
@@ -53,7 +54,7 @@ const App = () => {
             }}>
             <Routes>
               <Route path='/:sport' element={<NewListApp />} />
-              <Route path='/' element={<NewListApp />} />
+              <Route path='/' element={<Home />} />
             </Routes>
           </Container>
         </Box>
