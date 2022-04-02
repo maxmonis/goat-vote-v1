@@ -6,21 +6,7 @@ import Typography from '@mui/material/Typography'
 
 import { useAppSelector, useAppDispatch } from '../app/hooks'
 import { selectRankings, getAllRankings } from '../features/create/rankingSlice'
-
-type Sport = 'basketball' | 'baseball' | 'football'
-
-interface Ranking {
-  creatorID: string
-  creatorName: string
-  category: Sport
-  timeframe: string
-  subcategory: string
-  titles: String
-}
-
-interface SavedRanking extends Ranking {
-  _id: string
-}
+import { SavedRanking } from '../interfaces'
 
 const Home = () => {
   const { t } = useTranslation()

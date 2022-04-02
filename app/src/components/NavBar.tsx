@@ -1,4 +1,4 @@
-import { useState, MouseEvent, ReactElement } from 'react'
+import { useState, MouseEvent } from 'react'
 import { Link } from 'react-router-dom'
 
 import AppBar from '@mui/material/AppBar'
@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography'
 import useScrollTrigger from '@mui/material/useScrollTrigger'
 
 import UserMenu from './UserMenu'
+import { NavBarProps, HideOnScrollProps } from '../interfaces'
 
 const pages = [
   { name: 'Baseball', route: '/baseball' },
@@ -23,17 +24,7 @@ const pages = [
   { name: 'Football', route: '/football' },
 ]
 
-interface NavBarProps {
-  dark: boolean
-  toggleDark: Function
-}
-
-interface HideProps {
-  window?: () => Window
-  children: ReactElement
-}
-
-const HideOnScroll = ({ children, window }: HideProps) => {
+const HideOnScroll = ({ children, window }: HideOnScrollProps) => {
   const trigger = useScrollTrigger({
     target: window ? window() : undefined,
   })
@@ -57,7 +48,11 @@ const NavBar = ({ dark, toggleDark }: NavBarProps) => {
 
   return (
     <HideOnScroll {...this}>
-      <AppBar position='sticky'>
+      <AppBar
+        position='sticky'
+        sx={{
+          bgcolor: 'background.paper',
+        }}>
         <Container maxWidth='xl'>
           <Toolbar disableGutters>
             <Typography
@@ -82,7 +77,7 @@ const NavBar = ({ dark, toggleDark }: NavBarProps) => {
                 aria-controls='menu-appbar'
                 aria-haspopup='true'
                 onClick={handleOpenNavMenu}
-                color='inherit'>
+                color='default'>
                 <MenuIcon />
               </IconButton>
               <Menu
@@ -141,7 +136,7 @@ const NavBar = ({ dark, toggleDark }: NavBarProps) => {
                   onClick={handleCloseNavMenu}
                   sx={{
                     my: 2,
-                    color: 'white',
+                    color: 'text.primary',
                     display: 'block',
                   }}>
                   {name}

@@ -1,11 +1,4 @@
-import {
-  useEffect,
-  useState,
-  SyntheticEvent,
-  Dispatch,
-  SetStateAction,
-  FormEvent,
-} from 'react'
+import { useEffect, useState, SyntheticEvent, FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Alert from '@mui/material/Alert'
@@ -25,19 +18,7 @@ import SelectionsList from './SelectionsList'
 import useDebounce from '../hooks/useDebounce'
 import { getInitials } from '../functions/helpers'
 import searchWiki from '../functions/searchWiki'
-
-interface Selection {
-  source: string
-  title: string
-}
-
-interface EditingListProps {
-  selections: Selection[]
-  setSelections: Dispatch<SetStateAction<Selection[]>>
-  sport: string
-  category: string
-  timeframe: string
-}
+import { Selection, EditingListProps } from '../interfaces'
 
 const EditingList = ({
   selections,

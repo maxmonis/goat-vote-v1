@@ -11,19 +11,10 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
+import Typography from '@mui/material/Typography'
 
 import { getInitials } from '../functions/helpers'
-import { Typography } from '@mui/material'
-
-interface Selection {
-  source: string
-  title: string
-}
-
-interface SelectionsListProps {
-  selections: Selection[]
-  setSelections: React.Dispatch<React.SetStateAction<Selection[]>>
-}
+import { SelectionsListProps } from '../interfaces'
 
 const SelectionsList = ({ selections, setSelections }: SelectionsListProps) => {
   const removeSelection = (titleToRemove: string) => {

@@ -21,31 +21,7 @@ import { selectUser } from '../auth/authSlice'
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { addRanking } from './rankingSlice'
-
-interface SportOptions {
-  timeframes: string[]
-  categories: string[]
-}
-
-type Sport = 'basketball' | 'baseball' | 'football'
-
-type Options = {
-  [key in Sport]: SportOptions
-}
-
-interface Selection {
-  source: string
-  title: string
-}
-
-interface Ranking {
-  creatorID: string
-  creatorName: string
-  category: Sport
-  timeframe: string
-  subcategory: string
-  titles: string
-}
+import { Selection, Ranking, Options, Sport } from '../../interfaces'
 
 const isValidSport = (key?: string): key is Sport =>
   typeof key === 'string' &&

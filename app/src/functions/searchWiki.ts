@@ -1,11 +1,6 @@
 import axios from 'axios'
 
-interface SearchParams {
-  query: string
-  sport: string
-  category: string
-  timeframe: string
-}
+import { SearchParams } from '../interfaces'
 
 const searchWiki = async ({
   query,

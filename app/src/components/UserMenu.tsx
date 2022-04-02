@@ -13,11 +13,7 @@ import Switch from '@mui/material/Switch'
 
 import { useAppSelector, useAppDispatch } from '../app/hooks'
 import { selectUser, setUser, resetUser } from '../features/auth/authSlice'
-
-interface UserMenuProps {
-  dark: boolean
-  toggleDark: Function
-}
+import { UserMenuProps } from '../interfaces'
 
 const UserMenu = ({ dark, toggleDark }: UserMenuProps) => {
   const { profileObj } = useAppSelector(selectUser)
