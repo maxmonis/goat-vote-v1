@@ -5,21 +5,17 @@ class LocalStorageService {
     this.key = `goat-vote_${key}`
   }
 
-  get(): unknown {
-    const res = localStorage.getItem(this.key)
-    return res ? JSON.parse(res) : null
+  public get<T>(): T | null {
+    const item = localStorage.getItem(this.key)
+    return item ? JSON.parse(item) : null
   }
 
-  set(payload: unknown) {
-    localStorage.setItem(this.key, JSON.stringify(payload))
+  public set<T>(item: T) {
+    localStorage.setItem(this.key, JSON.stringify(item))
   }
 
-  remove() {
+  public remove() {
     localStorage.removeItem(this.key)
-  }
-
-  clear() {
-    localStorage.clear()
   }
 }
 

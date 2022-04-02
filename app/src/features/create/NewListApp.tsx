@@ -18,75 +18,14 @@ import { TransitionProps } from '@mui/material/transitions'
 
 import EditingList from '../../components/EditingList'
 import { selectUser } from '../auth/authSlice'
-
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { addRanking } from './rankingSlice'
-import { Selection, Ranking, Options, Sport } from '../../interfaces'
+import { Selection, Ranking, Sport } from '../../interfaces'
+import { options } from '../../constants'
 
 const isValidSport = (key?: string): key is Sport =>
   typeof key === 'string' &&
   ['basketball', 'baseball', 'football'].includes(key)
-
-const defaultTimeframes = [
-  'all-time',
-  'currently',
-  '21st century',
-  '20th century',
-  '2020s',
-  '2010s',
-  '2000s',
-  '1990s',
-  '1980s',
-  '1970s',
-  '1960s',
-  'pre-1960',
-]
-const baseballTimeframes = [
-  ...defaultTimeframes.slice(0, -1),
-  ...['1950s', '1940s', '1930s', '1920s', 'pre-1920'],
-]
-
-const defaultCategories = ['player', 'offensive player', 'defensive player']
-const basketballCategories = [
-  ...defaultCategories,
-  'point guard',
-  'shooting guard',
-  'small forward',
-  'power forward',
-  'center',
-]
-const footballCategories = [
-  ...defaultCategories,
-  'quarterback',
-  'skill position player',
-  'offensive lineman',
-  'defensive lineman',
-  'linebacker',
-  'defensive back',
-]
-const baseballCategories = [
-  ...defaultCategories,
-  'pitcher',
-  'catcher',
-  'corner infielder',
-  'middle infielder',
-  'outfielder',
-]
-
-const options: Options = {
-  baseball: {
-    timeframes: baseballTimeframes,
-    categories: baseballCategories,
-  },
-  basketball: {
-    timeframes: defaultTimeframes,
-    categories: basketballCategories,
-  },
-  football: {
-    timeframes: defaultTimeframes,
-    categories: footballCategories,
-  },
-}
 
 const Transition = forwardRef(
   (
@@ -166,7 +105,7 @@ const NewListApp = () => {
 
   return isValidSport(sport) ? (
     <Container
-      maxWidth='lg'
+      maxWidth='xl'
       sx={{
         display: 'flex',
         gap: 12,

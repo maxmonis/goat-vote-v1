@@ -20,13 +20,8 @@ import { getInitials } from '../functions/helpers'
 import searchWiki from '../functions/searchWiki'
 import { Selection, EditingListProps } from '../interfaces'
 
-const EditingList = ({
-  selections,
-  setSelections,
-  sport,
-  category,
-  timeframe,
-}: EditingListProps) => {
+const EditingList = (props: EditingListProps) => {
+  const { selections, setSelections, sport, category, timeframe } = props
   const { t } = useTranslation()
   const [appliedQuery, setAppliedQuery] = useState('')
   const [isLoading, setIsLoading] = useState(false)

@@ -46,7 +46,7 @@ const App = () => {
         <Box>
           <NavBar dark={dark} toggleDark={toggleDark} />
           <Container
-            maxWidth='lg'
+            maxWidth='xl'
             sx={{
               mx: 'auto',
               minHeight: '90vh',

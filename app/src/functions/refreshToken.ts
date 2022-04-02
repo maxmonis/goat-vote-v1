@@ -3,10 +3,8 @@ import axios from 'axios'
 
 import LocalStorageService from '../services/LocalStorageService'
 
-const refreshToken = ({
-  tokenObj,
-  reloadAuthResponse,
-}: GoogleLoginResponse) => {
+const refreshToken = (googleLoginResponse: GoogleLoginResponse) => {
+  const { tokenObj, reloadAuthResponse } = googleLoginResponse
   setAuthtoken(tokenObj.access_token)
   let refreshTiming = (tokenObj.expires_in || 3600 - 5 * 60) * 1000
   const handleRefresh = async () => {

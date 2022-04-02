@@ -8,16 +8,12 @@ import MenuItem from '@mui/material/MenuItem'
 import Tooltip from '@mui/material/Tooltip'
 
 import LocalStorageService from '../services/LocalStorageService'
+import { languageOptions } from '../constants'
 
 const LocaleApp = () => {
   const localLanguage = new LocalStorageService('preferred-lng')
   const { i18n, t } = useTranslation()
-  const { changeLanguage } = i18n
-  const [language, setLanguage] = useState('en')
-  const languages = [
-    { key: 'en', name: 'English' },
-    { key: 'es', name: 'Spanish' },
-  ]
+  const { changeLanguage, language } = i18n
 
   const [anchorElLocales, setAnchorElLocales] = useState<null | HTMLElement>(
     null
@@ -34,7 +30,6 @@ const LocaleApp = () => {
   const handleClick = (key: string) => {
     localLanguage.set(key)
     handleCloseLocaleMenu()
-    setLanguage(key)
     changeLanguage(key)
   }
 
@@ -60,7 +55,7 @@ const LocaleApp = () => {
         }}
         open={Boolean(anchorElLocales)}
         onClose={handleCloseLocaleMenu}>
-        {languages.map(({ key, name }) => (
+        {languageOptions.map(({ key, name }) => (
           <MenuItem key={key} onClick={() => handleClick(key)}>
             {t(name)}
           </MenuItem>

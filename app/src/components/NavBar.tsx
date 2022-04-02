@@ -12,17 +12,11 @@ import MenuItem from '@mui/material/MenuItem'
 import Slide from '@mui/material/Slide'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-
 import useScrollTrigger from '@mui/material/useScrollTrigger'
 
 import UserMenu from './UserMenu'
 import { NavBarProps, HideOnScrollProps } from '../interfaces'
-
-const pages = [
-  { name: 'Baseball', route: '/baseball' },
-  { name: 'Basketball', route: '/basketball' },
-  { name: 'Football', route: '/football' },
-]
+import { pages } from '../constants'
 
 const HideOnScroll = ({ children, window }: HideOnScrollProps) => {
   const trigger = useScrollTrigger({
