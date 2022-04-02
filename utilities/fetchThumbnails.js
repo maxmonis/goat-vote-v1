@@ -10,7 +10,7 @@ async function fetchThumbnails(titles, pithumbsize = '200') {
     ...BASE_PARAMS,
     prop: 'pageimages',
     pithumbsize,
-    titles: titles.join('|'),
+    titles: typeof titles === 'string' ? titles : titles.join('|'),
   }
   try {
     const { data } = await axios.get(BASE_URL, { params })

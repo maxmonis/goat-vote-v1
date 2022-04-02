@@ -10,7 +10,7 @@ async function fetchPages(titles) {
     ...BASE_PARAMS,
     rvprop: 'content',
     prop: 'revisions',
-    titles: titles.join('|'),
+    titles: typeof titles === 'string' ? titles : titles.join('|'),
   }
   try {
     const { data } = await axios.get(BASE_URL, { params })

@@ -20,7 +20,7 @@ import Home from './pages/Home'
 
 const App = () => {
   const localDark = new LocalStorageService('prefers-dark')
-  const localPrefersDark = localDark.get()
+  const localPrefersDark = localDark.get<boolean>()
   const browserPrefersDark = useMediaQuery('(prefers-color-scheme: dark)')
   const [dark, setDark] = useState(
     typeof localPrefersDark === 'boolean'

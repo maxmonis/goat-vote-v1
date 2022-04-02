@@ -12,7 +12,7 @@ const resources = {
 }
 const fallbackLng = 'en'
 const localLanguage = new LocalStorageService('preferred-lng')
-const lng = (localLanguage.get() as string) || fallbackLng
+const lng = localLanguage.get<string>() || fallbackLng
 
 i18n
   .use(detector)

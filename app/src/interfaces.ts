@@ -15,7 +15,7 @@ export interface HideOnScrollProps {
 
 export interface NavBarProps {
   dark: boolean
-  toggleDark: Function
+  toggleDark: () => void
 }
 
 export type Options = {
@@ -61,5 +61,5 @@ interface SportOptions {
 
 export interface UserMenuProps {
   dark: boolean
-  toggleDark: Function
+  toggleDark: () => void
 }
