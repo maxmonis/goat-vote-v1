@@ -19,7 +19,12 @@ const baseballTimeframes = [
   ...['1950s', '1940s', '1930s', '1920s', 'pre-1920'],
 ]
 
-const defaultCategories = ['player', 'offensive player', 'defensive player']
+const defaultCategories = [
+  'lineup',
+  'player',
+  'offensive player',
+  'defensive player',
+]
 const basketballCategories = [
   ...defaultCategories,
   'point guard',

@@ -1,17 +1,17 @@
-import i18n from 'i18next'
-import { initReactI18next } from 'react-i18next'
-import detector from 'i18next-browser-languagedetector'
+import i18n from "i18next"
+import {initReactI18next} from "react-i18next"
+import detector from "i18next-browser-languagedetector"
 
-import en from './en.json'
-import es from './es.json'
-import LocalStorageService from '../services/LocalStorageService'
+import en from "./en.json"
+import es from "./es.json"
+import LocalStorageService from "../services/LocalStorageService"
 
 const resources = {
-  en: { translation: en },
-  es: { translation: es },
+  en: {translation: en},
+  es: {translation: es},
 }
-const fallbackLng = 'en'
-const localLanguage = new LocalStorageService('preferred-lng')
+const fallbackLng = "en"
+const localLanguage = new LocalStorageService("preferred-lng")
 const lng = localLanguage.get<string>() || fallbackLng
 
 i18n

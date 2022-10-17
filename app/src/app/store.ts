@@ -1,16 +1,16 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
-import counterReducer from '../features/counter/counterSlice'
-import authReducer from '../features/auth/authSlice'
-import rankingsReducer from '../features/create/rankingSlice'
+import {configureStore, ThunkAction, Action} from "@reduxjs/toolkit"
+import authReducer from "../features/auth/authSlice"
+import rankingsReducer from "../features/create/rankingSlice"
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
     auth: authReducer,
     rankings: rankingsReducer,
   },
-  middleware: getDefaultMiddleware =>
-    getDefaultMiddleware({ serializableCheck: false }),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 })
 
 export type AppDispatch = typeof store.dispatch

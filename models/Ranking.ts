@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose")
 
 const RankingSchema = mongoose.Schema({
   creatorName: {
@@ -32,4 +32,6 @@ const RankingSchema = mongoose.Schema({
   },
 })
 
-module.exports = mongoose.model('ranking', RankingSchema)
+module.exports = mongoose.model("ranking", RankingSchema)
+
+export {}

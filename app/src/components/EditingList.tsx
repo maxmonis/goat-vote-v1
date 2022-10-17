@@ -1,84 +1,35 @@
-import { useEffect, useState, SyntheticEvent, FormEvent } from 'react'
-import { useTranslation } from 'react-i18next'
+import {useEffect, useState, SyntheticEvent, FormEvent} from "react"
+import {useTranslation} from "react-i18next"
 
-import Alert from '@mui/material/Alert'
-import Avatar from '@mui/material/Avatar'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import CircularProgress from '@mui/material/CircularProgress'
-import ClearIcon from '@mui/icons-material/Clear'
-import InputAdornment from '@mui/material/InputAdornment'
-import TextField from '@mui/material/TextField'
-import List from '@mui/material/List'
-import MenuItem from '@mui/material/MenuItem'
-import SearchIcon from '@mui/icons-material/Search'
-import Snackbar from '@mui/material/Snackbar'
+import Alert from "@mui/material/Alert"
+import Avatar from "@mui/material/Avatar"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import CircularProgress from "@mui/material/CircularProgress"
+import ClearIcon from "@mui/icons-material/Clear"
+import InputAdornment from "@mui/material/InputAdornment"
+import TextField from "@mui/material/TextField"
+import List from "@mui/material/List"
+import MenuItem from "@mui/material/MenuItem"
+import SearchIcon from "@mui/icons-material/Search"
+import Snackbar from "@mui/material/Snackbar"
 
-import SelectionsList from './SelectionsList'
-import useDebounce from '../hooks/useDebounce'
-import { getInitials } from '../functions/helpers'
-import searchWiki from '../functions/searchWiki'
-import { Selection, EditingListProps } from '../interfaces'
+import SelectionsList from "./SelectionsList"
+import useDebounce from "../hooks/useDebounce"
+import {getInitials} from "../functions/helpers"
+import searchWiki from "../functions/searchWiki"
+import {Selection, EditingListProps} from "../interfaces"
 
 const EditingList = (props: EditingListProps) => {
-  const { selections, setSelections, sport, category, timeframe } = props
-  const { t } = useTranslation()
-  const [appliedQuery, setAppliedQuery] = useState('')
+  const {selections, setSelections, sport, category, timeframe} = props
+  const {t} = useTranslation()
+  const [appliedQuery, setAppliedQuery] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [showSnackbar, setShowSnackbar] = useState(false)
-  const [snackbarText, setSnackbarText] = useState('')
+  const [snackbarText, setSnackbarText] = useState("")
   const [availableOptions, setAvailableOptions] = useState<Selection[]>([])
-  const [wikiQuery, setWikiQuery] = useState('')
+  const [wikiQuery, setWikiQuery] = useState("")
   const debouncedQuery = useDebounce(wikiQuery, 700)
-
-  const resetSearch = () => {
-    setWikiQuery('')
-    setAppliedQuery('')
-    setAvailableOptions([])
-    setSnackbarText('')
-    setShowSnackbar(false)
-  }
-
-  const handleClose = (_event?: SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') return
-    setShowSnackbar(false)
-  }
-
-  const fetchOptions = async (query: string) => {
-    if (isLoading) return
-    setIsLoading(true)
-    try {
-      const res = await searchWiki({ query, sport, category, timeframe })
-      setAvailableOptions(res.options)
-      setAppliedQuery(res.term)
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleClick = (clickedTitle: string) => {
-    if (selections.some(({ title }) => title === clickedTitle)) {
-      setSnackbarText(
-        t('{{option}} is already in the list', { option: clickedTitle })
-      )
-      setShowSnackbar(true)
-    } else {
-      const selectedOption = availableOptions.find(
-        ({ title }) => title === clickedTitle
-      )
-      if (selectedOption) setSelections([...selections, selectedOption])
-      setWikiQuery('')
-      setAppliedQuery('')
-      setAvailableOptions([])
-    }
-  }
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    if (wikiQuery.length > 2) fetchOptions(wikiQuery)
-  }
 
   useEffect(() => {
     if (debouncedQuery.length > 3 && !availableOptions.length)
@@ -88,39 +39,43 @@ const EditingList = (props: EditingListProps) => {
 
   return (
     <Box
-      display='flex'
-      flexDirection='column'
+      display="flex"
+      flexDirection="column"
       gap={10}
-      justifyContent='center'
-      mx='auto'
-      textAlign='center'>
+      justifyContent="center"
+      mx="auto"
+      textAlign="center"
+    >
       <Snackbar
-        open={showSnackbar}
         autoHideDuration={3000}
-        onClose={handleClose}>
-        <Alert severity='error'>
+        onClose={handleClose}
+        open={showSnackbar}
+      >
+        <Alert severity="error">
           {snackbarText}
           <Button
-            sx={{ ml: 3 }}
-            size='small'
-            variant='outlined'
-            onClick={resetSearch}>
-            {t('Clear query')}
+            onClick={resetSearch}
+            size="small"
+            sx={{ml: 3}}
+            variant="outlined"
+          >
+            {t("Clear query")}
           </Button>
         </Alert>
       </Snackbar>
-      <Box maxWidth='xs' mx='auto'>
+      <Box maxWidth="xs" mx="auto">
         {selections.length < 10 && (
           <Box
-            component='form'
-            onSubmit={handleSubmit}
+            alignItems="center"
+            component="form"
+            display="flex"
+            gap={1}
             noValidate
-            alignItems='center'
-            display='flex'
-            gap={1}>
+            onSubmit={handleSubmit}
+          >
             <TextField
               autoFocus
-              autoComplete='off'
+              autoComplete="off"
               error={
                 Boolean(appliedQuery) &&
                 appliedQuery === wikiQuery &&
@@ -131,11 +86,11 @@ const EditingList = (props: EditingListProps) => {
               }}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position='end'>
+                  <InputAdornment position="end">
                     {Boolean(wikiQuery) ? (
                       <ClearIcon
-                        sx={{ cursor: 'pointer' }}
                         onClick={resetSearch}
+                        sx={{cursor: "pointer"}}
                       />
                     ) : (
                       <SearchIcon />
@@ -143,17 +98,17 @@ const EditingList = (props: EditingListProps) => {
                   </InputAdornment>
                 ),
               }}
-              label={t('Search players')}
-              value={wikiQuery}
-              onChange={e => setWikiQuery(e.target.value)}
               helperText={t(
                 availableOptions.length
                   ? `Showing results for '{{query}}'`
                   : Boolean(appliedQuery) && appliedQuery === wikiQuery
                   ? `No results for '{{query}}'`
-                  : '',
-                { query: appliedQuery }
+                  : "",
+                {query: appliedQuery}
               )}
+              label={t("Search players")}
+              onChange={(e) => setWikiQuery(e.target.value)}
+              value={wikiQuery}
             />
           </Box>
         )}
@@ -163,39 +118,41 @@ const EditingList = (props: EditingListProps) => {
           </Box>
         )}
         {availableOptions.length > 0 && !isLoading && (
-          <List sx={{ mt: 3 }}>
-            {availableOptions.map(({ title, source }) => (
+          <List sx={{mt: 3}}>
+            {availableOptions.map(({title, source}) => (
               <MenuItem key={title} onClick={() => handleClick(title)}>
                 <Box
-                  sx={{ width: { xs: 45, sm: 60 } }}
-                  display='flex'
-                  justifyContent='center'
-                  flexShrink={0}>
+                  display="flex"
+                  flexShrink={0}
+                  justifyContent="center"
+                  sx={{width: {xs: 45, sm: 60}}}
+                >
                   {Boolean(source) ? (
                     <Avatar
-                      variant='rounded'
+                      alt={title}
+                      src={source}
                       sx={{
                         height: 40,
                         maxWidth: 30,
-                        width: 'auto',
+                        width: "auto",
                       }}
-                      alt={title}
-                      src={source}
+                      variant="rounded"
                     />
                   ) : (
                     <Avatar
-                      variant='rounded'
                       sx={{
                         height: 30,
                         my: 1,
                         px: 4,
                         width: 30,
-                      }}>
+                      }}
+                      variant="rounded"
+                    >
                       {getInitials(title)}
                     </Avatar>
                   )}
                 </Box>
-                {title.split(' (')[0]}
+                {title.split(" (")[0]}
               </MenuItem>
             ))}
           </List>
@@ -206,6 +163,54 @@ const EditingList = (props: EditingListProps) => {
       )}
     </Box>
   )
+
+  function resetSearch() {
+    setWikiQuery("")
+    setAppliedQuery("")
+    setAvailableOptions([])
+    setSnackbarText("")
+    setShowSnackbar(false)
+  }
+
+  function handleClose(_event?: SyntheticEvent | Event, reason?: string) {
+    if (reason !== "clickaway") setShowSnackbar(false)
+  }
+
+  async function fetchOptions(query: string) {
+    if (isLoading) return
+    setIsLoading(true)
+    try {
+      const res = await searchWiki({query, sport, category, timeframe})
+      setAvailableOptions(res.options)
+      setAppliedQuery(res.term)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  function handleClick(clickedTitle: string) {
+    if (selections.some(({title}) => title === clickedTitle)) {
+      setSnackbarText(
+        t("{{option}} is already in the list", {option: clickedTitle})
+      )
+      setShowSnackbar(true)
+    } else {
+      const selectedOption = availableOptions.find(
+        ({title}) => title === clickedTitle
+      )
+      if (selectedOption) setSelections([...selections, selectedOption])
+      setWikiQuery("")
+      setAppliedQuery("")
+      setAvailableOptions([])
+    }
+  }
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+    if (wikiQuery.length > 2) fetchOptions(wikiQuery)
+  }
 }
 
 export default EditingList

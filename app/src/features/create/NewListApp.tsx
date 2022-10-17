@@ -1,31 +1,31 @@
-import { useState, useEffect, forwardRef, ReactElement, Ref } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useParams, Navigate } from 'react-router-dom'
+import {useState, useEffect, forwardRef, ReactElement, Ref} from "react"
+import {useTranslation} from "react-i18next"
+import {useParams, Navigate} from "react-router-dom"
 
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Container from '@mui/material/Container'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogTitle from '@mui/material/DialogTitle'
-import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
-import Slide from '@mui/material/Slide'
-import Typography from '@mui/material/Typography'
-import { TransitionProps } from '@mui/material/transitions'
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import Container from "@mui/material/Container"
+import Dialog from "@mui/material/Dialog"
+import DialogActions from "@mui/material/DialogActions"
+import DialogContent from "@mui/material/DialogContent"
+import DialogContentText from "@mui/material/DialogContentText"
+import DialogTitle from "@mui/material/DialogTitle"
+import MenuItem from "@mui/material/MenuItem"
+import Select from "@mui/material/Select"
+import Slide from "@mui/material/Slide"
+import Typography from "@mui/material/Typography"
+import {TransitionProps} from "@mui/material/transitions"
 
-import EditingList from '../../components/EditingList'
-import { selectUser } from '../auth/authSlice'
-import { useAppSelector, useAppDispatch } from '../../app/hooks'
-import { addRanking } from './rankingSlice'
-import { Selection, Ranking, Sport } from '../../interfaces'
-import { options } from '../../constants'
+import EditingList from "../../components/EditingList"
+import {selectUser} from "../auth/authSlice"
+import {useAppSelector, useAppDispatch} from "../../app/hooks"
+import {addRanking} from "./rankingSlice"
+import {Selection, Ranking, Sport} from "../../interfaces"
+import {options} from "../../constants"
 
 const isValidSport = (key?: string): key is Sport =>
-  typeof key === 'string' &&
-  ['basketball', 'baseball', 'football'].includes(key)
+  typeof key === "string" &&
+  ["basketball", "baseball", "football"].includes(key)
 
 const Transition = forwardRef(
   (
@@ -33,17 +33,17 @@ const Transition = forwardRef(
       children: ReactElement
     },
     ref: Ref<unknown>
-  ) => <Slide direction='up' ref={ref} {...props} />
+  ) => <Slide direction="up" ref={ref} {...props} />
 )
 
 const NewListApp = () => {
-  const { profileObj } = useAppSelector(selectUser)
+  const {profileObj} = useAppSelector(selectUser)
   const dispatch = useAppDispatch()
-  const { t } = useTranslation()
-  const { sport } = useParams()
-  const selectedSport = isValidSport(sport) ? sport : 'basketball'
-  const [selectedTimeframe, setSelectedTimeframe] = useState('all-time')
-  const [selectedCategory, setSelectedCategory] = useState('player')
+  const {t} = useTranslation()
+  const {sport} = useParams()
+  const selectedSport = isValidSport(sport) ? sport : "basketball"
+  const [selectedTimeframe, setSelectedTimeframe] = useState("all-time")
+  const [selectedCategory, setSelectedCategory] = useState("player")
   const [selections, setSelections] = useState<Selection[]>([])
   const [isEditing, setIsEditing] = useState(selections.length > 0)
   const [isDialogOpen, setDialogVisibility] = useState(false)
@@ -58,24 +58,24 @@ const NewListApp = () => {
   }
 
   const reset = () => {
-    setSelectedCategory('player')
-    setSelectedTimeframe('all-time')
+    setSelectedCategory("player")
+    setSelectedTimeframe("all-time")
     setSelections([])
     setIsEditing(false)
   }
 
   const getTimeframeText = (key: string) => {
     switch (key) {
-      case 'all-time':
-        return t('of all time')
-      case 'currently':
-        return t('right now')
-      case 'pre-1920':
-        return t('before 1920')
-      case 'pre-1960':
-        return t('before 1960')
+      case "all-time":
+        return t("of all time")
+      case "currently":
+        return t("right now")
+      case "pre-1920":
+        return t("before 1920")
+      case "pre-1960":
+        return t("before 1960")
       default:
-        return t('of the {{decade}}', { decade: key })
+        return t("of the {{decade}}", {decade: key})
     }
   }
 
@@ -83,8 +83,8 @@ const NewListApp = () => {
 
   const handleSave = async () => {
     if (
-      typeof profileObj?.googleId === 'string' &&
-      typeof profileObj?.name === 'string'
+      typeof profileObj?.googleId === "string" &&
+      typeof profileObj?.name === "string"
     ) {
       const ranking: Ranking = {
         creatorID: profileObj.googleId,
@@ -92,7 +92,7 @@ const NewListApp = () => {
         category: selectedSport,
         timeframe: selectedTimeframe,
         subcategory: selectedCategory,
-        titles: selections.map(({ title }) => title).join('|'),
+        titles: selections.map(({title}) => title).join("|"),
       }
       try {
         await dispatch(addRanking(ranking))
@@ -105,41 +105,44 @@ const NewListApp = () => {
 
   return isValidSport(sport) ? (
     <Container
-      maxWidth='xl'
+      maxWidth="xl"
       sx={{
-        display: 'flex',
+        display: "flex",
         gap: 12,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        m: 'auto',
-        minHeight: '75vh',
+        flexDirection: "column",
+        justifyContent: "center",
+        m: "auto",
+        minHeight: "75vh",
         py: 12,
-        textAlign: 'center',
-      }}>
+        textAlign: "center",
+      }}
+    >
       {isEditing ? (
         <Box>
-          <Typography variant='h2' sx={{ maxWidth: '20ch', mx: 'auto' }}>
-            The best {selectedCategory} in {selectedSport}{' '}
+          <Typography variant="h2" sx={{maxWidth: "20ch", mx: "auto"}}>
+            The best {selectedCategory} in {selectedSport}{" "}
             {getTimeframeText(selectedTimeframe)}
           </Typography>
         </Box>
       ) : (
         <Box>
-          <Typography variant='h1'>
+          <Typography variant="h1">
             {selectedSport.charAt(0).toUpperCase() +
               selectedSport.substring(1).toLowerCase()}
           </Typography>
-          <Typography variant='h2'>{t('New List')}</Typography>
+          <Typography variant="h2">{t("New List")}</Typography>
           <Box
-            display='flex'
-            flexWrap='wrap'
+            display="flex"
+            flexWrap="wrap"
             gap={2}
-            justifyContent='center'
-            mt={8}>
+            justifyContent="center"
+            mt={8}
+          >
             <Select
               value={selectedCategory}
-              onChange={e => setSelectedCategory(e.target.value)}>
-              {options[selectedSport].categories.map(category => (
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              {options[selectedSport].categories.map((category) => (
                 <MenuItem key={category} value={category}>
                   The best {category}
                 </MenuItem>
@@ -147,8 +150,9 @@ const NewListApp = () => {
             </Select>
             <Select
               value={selectedTimeframe}
-              onChange={e => setSelectedTimeframe(e.target.value)}>
-              {options[selectedSport].timeframes.map(timeframe => (
+              onChange={(e) => setSelectedTimeframe(e.target.value)}
+            >
+              {options[selectedSport].timeframes.map((timeframe) => (
                 <MenuItem key={timeframe} value={timeframe}>
                   {getTimeframeText(timeframe)}
                 </MenuItem>
@@ -168,27 +172,29 @@ const NewListApp = () => {
       ) : (
         <Button
           onClick={() => setIsEditing(true)}
-          variant='contained'
-          size='large'
+          variant="contained"
+          size="large"
           sx={{
-            mx: 'auto',
-            width: 'min(80vw, 20rem)',
-          }}>
-          {t('Add Players')}
+            mx: "auto",
+            width: "min(80vw, 20rem)",
+          }}
+        >
+          {t("Add Players")}
         </Button>
       )}
-      <Box width='min(80vw, 20rem)' mx='auto'>
+      <Box width="min(80vw, 20rem)" mx="auto">
         {selections.length > 0 && (
           <Button
-            variant='contained'
-            size='large'
+            variant="contained"
+            size="large"
             onClick={handleSave}
             sx={{
-              width: '100%',
+              width: "100%",
               flexGrow: 1,
               mb: 50,
-            }}>
-            {t('Save')}
+            }}
+          >
+            {t("Save")}
           </Button>
         )}
         {isEditing && (
@@ -196,8 +202,9 @@ const NewListApp = () => {
             onClick={() =>
               selections.length ? handleClickOpen() : changeCategory()
             }
-            size='small'>
-            {t('Change Category')}
+            size="small"
+          >
+            {t("Change Category")}
           </Button>
         )}
         <Dialog
@@ -205,10 +212,11 @@ const NewListApp = () => {
           TransitionComponent={Transition}
           keepMounted
           onClose={handleClose}
-          aria-describedby='change-category-description'>
-          <DialogTitle>{'Discard changes?'}</DialogTitle>
+          aria-describedby="change-category-description"
+        >
+          <DialogTitle>{"Discard changes?"}</DialogTitle>
           <DialogContent>
-            <DialogContentText id='change-category-description'>
+            <DialogContentText id="change-category-description">
               Changing categories will delete your current list. This action is
               irreversible.
             </DialogContentText>
@@ -221,7 +229,7 @@ const NewListApp = () => {
       </Box>
     </Container>
   ) : (
-    <Navigate to='/basketball' />
+    <Navigate to="/basketball" />
   )
 }
 
