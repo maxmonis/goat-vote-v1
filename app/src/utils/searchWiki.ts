@@ -1,8 +1,14 @@
 import axios from "axios"
+import {Sport} from "../shared/models"
 
-import {SearchParams} from "../interfaces"
+type SearchParams = {
+  category: string
+  query: string
+  sport: Sport
+  timeframe: string
+}
 
-const searchWiki = async (searchParams: SearchParams) => {
+async function searchWiki(searchParams: SearchParams) {
   const {query, sport, category, timeframe} = searchParams
   const route = `api/search/sports/${sport}`
   const params = {term: query, category, timeframe}

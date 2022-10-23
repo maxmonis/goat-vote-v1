@@ -42,23 +42,19 @@ function _isValidOption(
   sport: "basketball" | "football" | "baseball",
   timeframe: string
 ) {
-  const leagues = Object.freeze({
-    baseball: "MLB",
-    basketball: "NBA",
-    football: "NFL",
-  })
+  const referencePages = {
+    baseball: "baseball-ref",
+    basketball: "basketball-ref",
+    football: "pro-football-ref",
+  } as const
 
-  const sportRegex = new RegExp(sport, "i")
-  const leagueRegex = new RegExp(leagues[sport], "i")
-  const descriptionRegex = new RegExp("short description", "i")
-  const contentArr = content.split("\n")
-  const description = contentArr.find((str) => str.match(descriptionRegex))
-
-  if (!description?.match(sportRegex) && !description?.match(leagueRegex)) {
+  if (!content?.match(new RegExp(referencePages[sport]))) {
     return false
   }
 
-  const optionProps = contentArr.filter((str) => str[0] === "|")
+  console.info(content)
+
+  const optionProps = content.split("\n")
 
   switch (sport) {
     case "baseball":
@@ -73,7 +69,7 @@ function _isValidOption(
 function _getProp(props: string[], propName: string) {
   const regex = new RegExp(propName, "i")
   return props
-    .find((prop) => prop?.match(regex))
+    .find((prop) => prop.match(regex))
     ?.split("=")[1]
     ?.trim()
 }
@@ -83,7 +79,7 @@ function _isValidBaseballPlayer(optionProps: string[], timeframe: string) {
   const finalYear =
     _extractYear(optionProps, "final2year") ||
     _extractYear(optionProps, "finalyear") ||
-    2100
+    3000
   return _isValidTimeframe(timeframe, debutYear, finalYear)
 }
 
@@ -91,11 +87,14 @@ function _isValidBasketballPlayer(optionProps: string[], timeframe: string) {
   const debutYear =
     _extractYear(optionProps, "career_start") ||
     _extractYear(optionProps, "draftyear")
-  const finalYear = _extractYear(optionProps, "career_end") || 2100
+  const finalYear = _extractYear(optionProps, "career_end") || 3000
   return _isValidTimeframe(timeframe, debutYear, finalYear)
 }
 
 function _isValidFootballPlayer(optionProps: string[], timeframe: string) {
+  const pastTeams = _getProp(optionProps, "pastteams")
+  console.info("pastTeams", pastTeams)
+  console.info("optionProps", optionProps)
   const debutYear =
     _extractYear(optionProps, "draftyear") ||
     _extractYear(optionProps, "undraftedyear") ||
@@ -111,7 +110,7 @@ function _extractYear(optionProps: string[], propName: string) {
 function _isValidTimeframe(
   timeframe: string,
   debutYear: number,
-  finalYear = 2100
+  finalYear = 3000
 ) {
   if (!debutYear) {
     return false
@@ -119,7 +118,7 @@ function _isValidTimeframe(
 
   switch (timeframe) {
     case "currently":
-      return finalYear === 2100
+      return finalYear === 3000
     case "all-time":
       return true
     case "21st century":
@@ -130,28 +129,10 @@ function _isValidTimeframe(
       return debutYear < 1960
     case "pre-1920":
       return debutYear < 1920
+    default:
+      const decadeStart = parseInt(timeframe)
+      return debutYear < decadeStart + 8 && finalYear > decadeStart + 2
   }
-
-  const {debutedBefore, debutedAfter, retiredAfter} =
-    _getDecadeCutoffs(timeframe)
-
-  return debutedBefore && retiredAfter
-    ? debutYear < debutedBefore && finalYear > retiredAfter
-    : debutedBefore && debutedAfter
-    ? debutYear > debutedAfter && debutYear < debutedBefore
-    : debutedBefore
-    ? debutYear < debutedBefore
-    : debutedAfter
-    ? debutYear > debutedAfter
-    : true
-}
-
-function _getDecadeCutoffs(decadeString: string, finalYear = 2100) {
-  const decade = parseInt(decadeString)
-  if (finalYear) {
-    return {debutedBefore: decade + 8, retiredAfter: decade + 2}
-  }
-  return {debutedBefore: decade + 10, debutedAfter: decade - 1}
 }
 
 module.exports = fetchSportsResults

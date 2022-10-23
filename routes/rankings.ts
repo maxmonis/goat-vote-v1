@@ -6,8 +6,7 @@ const Ranking = require("../models/Ranking")
 
 import {Request, Response} from "express"
 
-router.get("/", [], async (req: Request, res: Response) => {
-  console.info(req.body)
+router.get("/", [], async (_req: Request, res: Response) => {
   try {
     const allRankings = await Ranking.find().sort({date: -1})
     res.json(allRankings)

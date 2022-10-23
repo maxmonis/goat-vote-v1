@@ -13,18 +13,28 @@ import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
 import Typography from "@mui/material/Typography"
 
-import {getInitials} from "../functions/helpers"
-import {SelectionsListProps} from "../interfaces"
+import {Selection} from "../../shared/models"
+import {Dispatch, SetStateAction} from "react"
+import {getInitials} from "../../utils/helpers"
+
+type SelectionsListProps = {
+  selections: Selection[]
+  setSelections: Dispatch<SetStateAction<Selection[]>>
+}
 
 const SelectionsList = ({selections, setSelections}: SelectionsListProps) => {
   return (
     <DragDropContext onDragEnd={(result: DropResult) => handleDragEnd(result)}>
       <Droppable droppableId="selectionList">
-        {({droppableProps, innerRef, placeholder}) => (
-          <List ref={innerRef} {...droppableProps} sx={{mx: "auto"}}>
+        {({droppableProps, innerRef: droppableRef, placeholder}) => (
+          <List ref={droppableRef} {...droppableProps} sx={{mx: "auto"}}>
             {selections.map(({title, source}, i) => (
               <Draggable draggableId={title} index={i} key={title}>
-                {({draggableProps, dragHandleProps, innerRef}) => (
+                {({
+                  draggableProps,
+                  dragHandleProps,
+                  innerRef: draggableRef,
+                }) => (
                   <ListItem
                     sx={{
                       bgcolor: "background.paper",
@@ -38,7 +48,7 @@ const SelectionsList = ({selections, setSelections}: SelectionsListProps) => {
                         mb: "-1px",
                       },
                     }}
-                    ref={innerRef}
+                    ref={draggableRef}
                     {...draggableProps}
                   >
                     <Box

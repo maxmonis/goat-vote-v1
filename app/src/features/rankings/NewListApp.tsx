@@ -16,12 +16,12 @@ import Slide from "@mui/material/Slide"
 import Typography from "@mui/material/Typography"
 import {TransitionProps} from "@mui/material/transitions"
 
-import EditingList from "../../components/EditingList"
+import EditingList from "./EditingList"
 import {selectUser} from "../auth/authSlice"
 import {useAppSelector, useAppDispatch} from "../../app/hooks"
 import {addRanking} from "./rankingSlice"
-import {Selection, Ranking, Sport} from "../../interfaces"
-import {options} from "../../constants"
+import {Selection, Ranking, Sport} from "../../shared/models"
+import {options} from "../../shared/constants"
 
 const isValidSport = (key?: string): key is Sport =>
   typeof key === "string" &&
@@ -46,10 +46,10 @@ const NewListApp = () => {
   const [selectedCategory, setSelectedCategory] = useState("player")
   const [selections, setSelections] = useState<Selection[]>([])
   const [isEditing, setIsEditing] = useState(selections.length > 0)
-  const [isDialogOpen, setDialogVisibility] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const handleClickOpen = () => setDialogVisibility(true)
-  const handleClose = () => setDialogVisibility(false)
+  const handleClickOpen = () => setIsDialogOpen(true)
+  const handleClose = () => setIsDialogOpen(false)
 
   const changeCategory = () => {
     setIsEditing(false)
@@ -79,14 +79,14 @@ const NewListApp = () => {
     }
   }
 
-  useEffect(() => reset(), [selectedSport])
+  useEffect(reset, [selectedSport])
 
   const handleSave = async () => {
     if (
       typeof profileObj?.googleId === "string" &&
       typeof profileObj?.name === "string"
     ) {
-      const ranking: Ranking = {
+      const ranking = {
         creatorID: profileObj.googleId,
         creatorName: profileObj.name,
         category: selectedSport,
@@ -208,11 +208,11 @@ const NewListApp = () => {
           </Button>
         )}
         <Dialog
-          open={isDialogOpen}
-          TransitionComponent={Transition}
+          aria-describedby="change-category-description"
           keepMounted
           onClose={handleClose}
-          aria-describedby="change-category-description"
+          open={isDialogOpen}
+          TransitionComponent={Transition}
         >
           <DialogTitle>{"Discard changes?"}</DialogTitle>
           <DialogContent>

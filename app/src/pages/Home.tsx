@@ -5,8 +5,8 @@ import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 
 import {useAppSelector, useAppDispatch} from "../app/hooks"
-import {selectRankings, getAllRankings} from "../features/create/rankingSlice"
-import {SavedRanking} from "../interfaces"
+import {selectRankings, getAllRankings} from "../features/rankings/rankingSlice"
+import {SavedRanking} from "../shared/models"
 
 const Home = () => {
   const {t} = useTranslation()

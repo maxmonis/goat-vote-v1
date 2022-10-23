@@ -1,20 +1,18 @@
-import { StrictMode } from 'react'
-import { render } from 'react-dom'
-import { Provider } from 'react-redux'
+import {createRoot} from "react-dom/client"
+import {Provider} from "react-redux"
 
-import App from './App'
-import { store } from './app/store'
-import * as serviceWorker from './serviceWorker'
+import "./localization/i18n"
+import {store} from "./app/store"
+import * as serviceWorker from "./serviceWorker"
+import App from "./App"
 
-import './localization/i18n'
+const container = document.getElementById("root")
+const root = createRoot(container as HTMLElement)
 
-render(
-  <StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </StrictMode>,
-  document.getElementById('root')
+root.render(
+  <Provider {...{store}}>
+    <App />
+  </Provider>
 )
 
 serviceWorker.unregister()

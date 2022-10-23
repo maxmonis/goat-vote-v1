@@ -16,9 +16,7 @@ async function fetchPages(titles: string | string[]) {
     const {
       data,
     }: {
-      data:
-        | {query?: {pages: {title: string; revisions: {"*": unknown}[]}[]}}
-        | undefined
+      data?: {query?: {pages: {title: string; revisions: {"*": string}[]}[]}}
     } = await axios.get(BASE_URL, {params})
     return Object.values(data?.query?.pages || {})?.map(
       ({title, revisions}) => ({

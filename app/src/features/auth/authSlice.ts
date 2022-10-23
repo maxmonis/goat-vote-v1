@@ -5,10 +5,10 @@ import {
   GoogleLoginResponseOffline,
 } from "react-google-login"
 
-import refreshToken from "../../functions/refreshToken"
-import LocalStorageService from "../../services/LocalStorageService"
+import refreshToken from "../../utils/refreshToken"
+import LocalStorage from "../../utils/LocalStorage"
 
-const localToken = new LocalStorageService("access_token")
+const tokenStorage = new LocalStorage("access-token")
 
 const initialState: {
   user: {
@@ -20,10 +20,6 @@ const initialState: {
 }
 
 export const selectUser = (state: RootState) => state.auth.user
-
-const isOnlineResponse = (
-  res: GoogleLoginResponse | GoogleLoginResponseOffline
-): res is GoogleLoginResponse => Boolean(res as GoogleLoginResponse)
 
 export const authSlice = createSlice({
   name: "auth",
@@ -46,7 +42,7 @@ export const authSlice = createSlice({
       }
     },
     resetUser: () => {
-      localToken.remove()
+      tokenStorage.remove()
       return initialState
     },
   },
@@ -55,3 +51,9 @@ export const authSlice = createSlice({
 export const {setUser, resetUser} = authSlice.actions
 
 export default authSlice.reducer
+
+function isOnlineResponse(
+  action: GoogleLoginResponse | GoogleLoginResponseOffline
+): action is GoogleLoginResponse {
+  return typeof (action as GoogleLoginResponse).googleId === "string"
+}

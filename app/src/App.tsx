@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react"
+import {useState} from "react"
 import {Route, BrowserRouter as Router, Routes} from "react-router-dom"
 
 import {
@@ -12,15 +12,16 @@ import Container from "@mui/material/Container"
 import CssBaseline from "@mui/material/CssBaseline"
 import useMediaQuery from "@mui/material/useMediaQuery"
 
-import Footer from "./components/Footer"
+import Footer from "./features/footer/Footer"
 import Home from "./pages/Home"
-import LocalStorageService from "./services/LocalStorageService"
-import NavBar from "./components/NavBar"
-import NewListApp from "./features/create/NewListApp"
+import LocalStorage from "./utils/LocalStorage"
+import NavBar from "./features/header/NavBar"
+import NewListApp from "./features/rankings/NewListApp"
+
+const darkStorage = new LocalStorage("prefers-dark")
 
 const App = () => {
-  const localDark = new LocalStorageService("prefers-dark")
-  const localPrefersDark = localDark.get<boolean>()
+  const localPrefersDark = darkStorage.get<boolean>()
   const browserPrefersDark = useMediaQuery("(prefers-color-scheme: dark)")
   const [dark, setDark] = useState(
     typeof localPrefersDark === "boolean"
@@ -37,17 +38,17 @@ const App = () => {
     })
   )
 
-  useEffect(() => {
-    localDark.set(dark)
-    // eslint-disable-next-line
-  }, [dark])
+  const toggleDark = () => {
+    darkStorage.set(!dark)
+    setDark(!dark)
+  }
 
   return (
     <Router>
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
         <Box>
-          <NavBar dark={dark} toggleDark={() => setDark(!dark)} />
+          <NavBar {...{dark, toggleDark}} />
           <Container
             maxWidth="xl"
             sx={{

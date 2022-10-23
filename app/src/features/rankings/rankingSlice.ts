@@ -1,14 +1,15 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit"
+import {Ranking, SavedRanking, Sport} from "../../shared/models"
 import {RootState} from "../../app/store"
 import {uploadRanking, loadRankings} from "./rankingAPI"
 
 export const selectRankings = (state: RootState) => state.rankings.rankings
 
-const initialState: {rankings: any[]} = {rankings: []}
+const initialState: {rankings: SavedRanking[]} = {rankings: []}
 
 export const addRanking = createAsyncThunk(
   "ranking/uploadRanking",
-  async (ranking: any) => {
+  async (ranking: Ranking) => {
     const {data} = await uploadRanking(ranking)
     return data
   }
@@ -24,7 +25,7 @@ export const getAllRankings = createAsyncThunk(
 
 export const getSportRankings = createAsyncThunk(
   "ranking/loadSportRankings",
-  async (sport: string) => {
+  async (sport: Sport) => {
     const {data} = await loadRankings({sport})
     return data
   }

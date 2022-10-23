@@ -1,4 +1,11 @@
-import {useEffect, useState, SyntheticEvent, FormEvent} from "react"
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  SyntheticEvent,
+  useEffect,
+  useState,
+} from "react"
 import {useTranslation} from "react-i18next"
 
 import Alert from "@mui/material/Alert"
@@ -15,13 +22,26 @@ import SearchIcon from "@mui/icons-material/Search"
 import Snackbar from "@mui/material/Snackbar"
 
 import SelectionsList from "./SelectionsList"
-import useDebounce from "../hooks/useDebounce"
-import {getInitials} from "../functions/helpers"
-import searchWiki from "../functions/searchWiki"
-import {Selection, EditingListProps} from "../interfaces"
+import useDebounce from "../../hooks/useDebounce"
+import {getInitials} from "../../utils/helpers"
+import searchWiki from "../../utils/searchWiki"
+import {Selection, Sport} from "../../shared/models"
 
-const EditingList = (props: EditingListProps) => {
-  const {selections, setSelections, sport, category, timeframe} = props
+type EditingListProps = {
+  category: string
+  selections: Selection[]
+  setSelections: Dispatch<SetStateAction<Selection[]>>
+  sport: Sport
+  timeframe: string
+}
+
+const EditingList = ({
+  category,
+  selections,
+  setSelections,
+  sport,
+  timeframe,
+}: EditingListProps) => {
   const {t} = useTranslation()
   const [appliedQuery, setAppliedQuery] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -32,8 +52,9 @@ const EditingList = (props: EditingListProps) => {
   const debouncedQuery = useDebounce(wikiQuery, 700)
 
   useEffect(() => {
-    if (debouncedQuery.length > 3 && !availableOptions.length)
+    if (debouncedQuery.length > 3 && availableOptions.length === 0) {
       fetchOptions(wikiQuery)
+    }
     //eslint-disable-next-line
   }, [debouncedQuery])
 
@@ -159,7 +180,7 @@ const EditingList = (props: EditingListProps) => {
         )}
       </Box>
       {selections.length > 0 && (
-        <SelectionsList selections={selections} setSelections={setSelections} />
+        <SelectionsList {...{selections, setSelections}} />
       )}
     </Box>
   )

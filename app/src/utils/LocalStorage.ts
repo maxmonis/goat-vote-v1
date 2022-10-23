@@ -1,7 +1,9 @@
-class LocalStorageService {
-  private key: string
+type Key = "access-token" | "preferred-lng" | "prefers-dark"
 
-  constructor(key: string) {
+class LocalStorage {
+  private readonly key: string
+
+  constructor(key: Key) {
     this.key = `goat-vote_${key}`
   }
 
@@ -19,4 +21,4 @@ class LocalStorageService {
   }
 }
 
-export default LocalStorageService
+export default LocalStorage

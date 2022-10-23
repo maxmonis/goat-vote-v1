@@ -1,6 +1,6 @@
 import {configureStore, ThunkAction, Action} from "@reduxjs/toolkit"
 import authReducer from "../features/auth/authSlice"
-import rankingsReducer from "../features/create/rankingSlice"
+import rankingsReducer from "../features/rankings/rankingSlice"
 
 export const store = configureStore({
   reducer: {
